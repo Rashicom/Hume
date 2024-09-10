@@ -1,3 +1,4 @@
+{% load static %}
 <!-- /*
 * Template Name: Learner
 * Template Author: Untree.co
@@ -10,7 +11,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="author" content="Untree.co">
-  <link rel="shortcut icon" href="favicon.png">
+  <link rel="shortcut icon" href="{% static 'favicon.png' %}">
 
   <meta name="description" content="" />
   <meta name="keywords" content="bootstrap, bootstrap4" />
@@ -20,15 +21,15 @@
 
   <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
 
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/animate.min.css">
-  <link rel="stylesheet" href="css/owl.carousel.min.css">
-  <link rel="stylesheet" href="css/owl.theme.default.min.css">
-  <link rel="stylesheet" href="css/jquery.fancybox.min.css">
-  <link rel="stylesheet" href="fonts/icomoon/style.css">
-  <link rel="stylesheet" href="fonts/flaticon/font/flaticon.css">
-  <link rel="stylesheet" href="css/aos.css">
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
+  <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+  <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static 'css/aos.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
   <title>Learner Free Bootstrap Template by Untree.co</title>
 </head>
@@ -58,11 +59,11 @@
           </div>
 
           <div class="col-6 col-lg-3 text-right">
-            <a href="login.html" class="small mr-3">
+            <a href="{% url 'login' %}" class="small mr-3">
               <span class="icon-lock"></span>
               Log In
             </a>
-            <a href="register.html" class="small">
+            <a href="{% url 'register' %}" class="small">
               <span class="icon-person"></span>
               Register
             </a>
@@ -74,14 +75,14 @@
     <div class="sticky-nav js-sticky-header">
       <div class="container position-relative">
         <div class="site-navigation text-center">
-          <a href="index.html" class="logo menu-absolute m-0">Learner<span class="text-primary">.</span></a>
+          <a href="{% url 'home' %}" class="logo menu-absolute m-0">Learner<span class="text-primary">.</span></a>
 
           <ul class="js-clone-nav d-none d-lg-inline-block site-menu">
-            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="{% url 'home' %}">Home</a></li>
             <li class="has-children">
               <a href="#">Dropdown</a>
               <ul class="dropdown">
-                <li><a href="elements.html">Elements</a></li>
+                <li><a href="{% url 'elements' %}">Elements</a></li>
                 <li class="has-children">
                   <a href="#">Menu Two</a>
                   <ul class="dropdown">
@@ -93,11 +94,11 @@
                 <li><a href="#">Menu Three</a></li>
               </ul>
             </li>
-            <li><a href="staff.html">Our Staff</a></li>
-            <li><a href="news.html">News</a></li>
-            <li><a href="gallery.html">Gallery</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
+            <li><a href="{% url 'staff' %}">Our Staff</a></li>
+            <li><a href="{% url 'news' %}">News</a></li>
+            <li><a href="{% url 'gallery' %}">Gallery</a></li>
+            <li class="active"><a href="{% url 'about' %}">About</a></li>
+            <li><a href="{% url 'contact' %}">Contact</a></li>
           </ul>
 
           <a href="#" class="btn-book btn btn-secondary btn-sm menu-absolute">Enroll Now</a>
@@ -112,7 +113,7 @@
   </nav>
   
 
-  <div class="untree_co-hero overlay" style="background-image: url('images/hero-img-1-min.jpg');">
+  <div class="untree_co-hero overlay" style="background-image: url('{% static 'images/hero-img-1-min.jpg' %}');">
 
 
     <div class="container">
@@ -273,7 +274,7 @@
         </div>
         <div class="col-lg-6" data-aos="fade-up" data-aos-delay="0">
           <figure class="img-wrap-2">
-            <img src="images/teacher-min.jpg" alt="Image" class="img-fluid">
+            <img src="{% static 'images/teacher-min.jpg' %}" alt="Image" class="img-fluid">
             <div class="dotted"></div>
           </figure>
 
@@ -353,7 +354,7 @@
       <div class="row">
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
           <div class="custom-media">
-            <a href="#"><img src="images/img-school-1-min.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#"><img src="{% static 'images/img-school-1-min.jpg' %}" alt="Image" class="img-fluid"></a>
             <div class="custom-media-body">
               <div class="d-flex justify-content-between pb-3">
                 <div class="text-primary"><span class="uil uil-book-open"></span> <span>43 lesson</span></div>
@@ -370,7 +371,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
           <div class="custom-media">
-            <a href="#"><img src="images/img-school-2-min.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#"><img src="{% static 'images/img-school-2-min.jpg' %}" alt="Image" class="img-fluid"></a>
             <div class="custom-media-body">
               <div class="d-flex justify-content-between pb-3">
                 <div class="text-primary"><span class="uil uil-book-open"></span> <span>43 lesson</span></div>
@@ -387,7 +388,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
           <div class="custom-media">
-            <a href="#"><img src="images/img-school-3-min.jpg" alt="Image" class="img-fluid"></a>
+            <a href="#"><img src="{% static 'images/img-school-3-min.jpg' %}" alt="Image" class="img-fluid"></a>
             <div class="custom-media-body">
               <div class="d-flex justify-content-between pb-3">
                 <div class="text-primary"><span class="uil uil-book-open"></span> <span>43 lesson</span></div>
@@ -406,7 +407,7 @@
     </div>
   </div>
 
-  <div class="untree_co-section pt-0 bg-img overlay" style="background-image: url('images/img-school-1-min.jpg');">
+  <div class="untree_co-section pt-0 bg-img overlay" style="background-image: url('{% static 'images/img-school-1-min.jpg' %}');">
     <div class="container">
       <div class="row align-items-center justify-content-center text-center">
         <div class="col-lg-7">
@@ -454,7 +455,7 @@
           <div class="bg-1"></div>
           <a href="https://vimeo.com/342333493" data-fancybox class="video-wrap">
             <span class="play-wrap"><span class="icon-play"></span></span>
-            <img src="images/img-school-4-min.jpg" alt="Image" class="img-fluid rounded">
+            <img src="{% static 'images/img-school-4-min.jpg' %}" alt="Image" class="img-fluid rounded">
           </a>
         </div>
       </div>
@@ -473,7 +474,7 @@
         <div class="col-lg-6"  data-aos="fade-up" data-aos-delay="100">
           <div class="media-h d-flex h-100">
             <figure>
-              <img src="images/img-school-1-min.jpg" alt="Image">
+              <img src="{% static 'images/img-school-1-min.jpg' %}" alt="Image">
             </figure>
             <div class="media-h-body">
               <h2 class="mb-3"><a href="#">Education for Tomorrow's Leaders</a></h2>
@@ -486,7 +487,7 @@
         <div class="col-lg-6"  data-aos="fade-up" data-aos-delay="200">
           <div class="media-h d-flex h-100">
             <figure>
-              <img src="images/img-school-2-min.jpg" alt="Image">
+              <img src="{% static 'images/img-school-2-min.jpg' %}" alt="Image">
             </figure>
             <div class="media-h-body">
               <h2 class="mb-3"><a href="#">Enroll Your Kids This Summer to get 30% off</a></h2>
@@ -567,7 +568,7 @@
                 <p>
                 &ldquo;Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.&rdquo;</p>
                 <div class="author">
-                  <img src="images/person_1.jpg" alt="Free template by TemplateUX">
+                  <img src="{% static 'images/person_1.jpg' %}" alt="Free template by TemplateUX">
                   <h3>John Doe</h3>
                   <p class="position">CEO, Founder</p>
                 </div>
@@ -580,7 +581,7 @@
                 <p>
                 &ldquo;When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way.&rdquo;</p>
                 <div class="author">
-                  <img src="images/person_2.jpg" alt="Free template by TemplateUX">
+                  <img src="{% static 'images/person_2.jpg' %}" alt="Free template by TemplateUX">
                   <h3>James Woodland</h3>
                   <p class="position">Designer at Facebook</p>
                 </div>
@@ -593,7 +594,7 @@
                 <p>
                 &ldquo;A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.&rdquo;</p>
                 <div class="author">
-                  <img src="images/person_3.jpg" alt="Free template by TemplateUX">
+                  <img src="{% static 'images/person_3.jpg' %}" alt="Free template by TemplateUX">
                   <h3>Rob Smith</h3>
                   <p class="position">Product Designer at Twitter</p>
                 </div>
@@ -613,7 +614,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-5 mr-auto mb-5 mb-lg-0"  data-aos="fade-up" data-aos-delay="0">
-          <img src="images/img-school-5-min.jpg" alt="image" class="img-fluid">
+          <img src="{% static 'images/img-school-5-min.jpg' %}" alt="image" class="img-fluid">
         </div>
         <div class="col-lg-7 ml-auto" data-aos="fade-up" data-aos-delay="100">
           <h3 class="line-bottom mb-4">Why Choose Us</h3>
@@ -629,7 +630,7 @@
                 <div class="accordion-body">
                   <div class="d-flex">
                     <div class="accordion-img mr-4">
-                      <img src="images/img-school-1-min.jpg" alt="Image" class="img-fluid">
+                      <img src="{% static 'images/img-school-1-min.jpg' %}" alt="Image" class="img-fluid">
                     </div>
                     <div>
                       <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
@@ -648,7 +649,7 @@
                 <div class="accordion-body">
                   <div class="d-flex">
                     <div class="accordion-img mr-4">
-                      <img src="images/img-school-2-min.jpg" alt="Image" class="img-fluid">
+                      <img src="{% static 'images/img-school-2-min.jpg' %}" alt="Image" class="img-fluid">
                     </div>
                     <div>
                       <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. </p>
@@ -667,7 +668,7 @@
                 <div class="accordion-body">
                   <div class="d-flex">
                     <div class="accordion-img mr-4">
-                      <img src="images/img-school-3-min.jpg" alt="Image" class="img-fluid">
+                      <img src="{% static 'images/img-school-3-min.jpg' %}" alt="Image" class="img-fluid">
                     </div>
                     <div>
                       <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane.</p>
@@ -728,17 +729,17 @@
           <div class="widget">
             <h3>Gallery</h3>
             <ul class="instafeed instagram-gallery list-unstyled">
-              <li><a class="instagram-item" href="images/gal_1.jpg" data-fancybox="gal"><img src="images/gal_1.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_1.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_1.jpg' %}" alt="" width="72" height="72"></a>
               </li>
-              <li><a class="instagram-item" href="images/gal_2.jpg" data-fancybox="gal"><img src="images/gal_2.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_2.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_2.jpg' %}" alt="" width="72" height="72"></a>
               </li>
-              <li><a class="instagram-item" href="images/gal_3.jpg" data-fancybox="gal"><img src="images/gal_3.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_3.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_3.jpg' %}" alt="" width="72" height="72"></a>
               </li>
-              <li><a class="instagram-item" href="images/gal_4.jpg" data-fancybox="gal"><img src="images/gal_4.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_4.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_4.jpg' %}" alt="" width="72" height="72"></a>
               </li>
-              <li><a class="instagram-item" href="images/gal_5.jpg" data-fancybox="gal"><img src="images/gal_5.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_5.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_5.jpg' %}" alt="" width="72" height="72"></a>
               </li>
-              <li><a class="instagram-item" href="images/gal_6.jpg" data-fancybox="gal"><img src="images/gal_6.jpg" alt="" width="72" height="72"></a>
+              <li><a class="instagram-item" href="{% static 'images/gal_6.jpg' %}" data-fancybox="gal"><img src="{% static 'images/gal_6.jpg' %}" alt="" width="72" height="72"></a>
               </li>
             </ul>
           </div> <!-- /.widget -->
@@ -774,16 +775,16 @@
       </div>
     </div>
 
-    <script src="js/jquery-3.4.1.min.js"></script>
-    <script src="js/popper.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.animateNumber.min.js"></script>
-    <script src="js/jquery.waypoints.min.js"></script>
-    <script src="js/jquery.fancybox.min.js"></script>
-    <script src="js/jquery.sticky.js"></script>
-    <script src="js/aos.js"></script>
-    <script src="js/custom.js"></script>
+    <script src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/jquery.animateNumber.min.js' %}"></script>
+    <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+    <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
+    <script src="{% static 'js/jquery.sticky.js' %}"></script>
+    <script src="{% static 'js/aos.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
 
   </body>
 
