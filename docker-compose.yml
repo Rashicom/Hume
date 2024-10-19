@@ -1,0 +1,20 @@
+services:
+  hume:
+    build: .
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./Hume/static:/code/Hume/static
+      - ./Hume/media:/code/Hume/media
+    depends_on:
+      - hume
+  
+    

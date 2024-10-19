@@ -40,3 +40,14 @@ class Elements(View):
 class Gallery(View):
     def get(self, request):
         return render(request, 'gallery.html')
+    
+class TestMap(View):
+    def get(self, request):
+        coordinates = [
+            {'lat': 40.7128, 'lng': -74.0060},  # New York
+            {'lat': 34.0522, 'lng': -118.2437},  # Los Angeles
+            {'lat': 51.5074, 'lng': -0.1278},    # London
+        ]
+
+        context = {'coordinates': coordinates}
+        return render(request, 'map.html', context)

@@ -11,4 +11,6 @@ urlpatterns = [
     path('contact/', views.Contact.as_view(), name='contact'),
     path('elements/', views.Elements.as_view(), name='elements'),
     path('gallery/', views.Gallery.as_view(), name='gallery'),
+
+    path('map/', views.TestMap.as_view(), name='map'),
 ]
