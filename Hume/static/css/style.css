@@ -1291,7 +1291,13 @@ h1, .h1, h2, .h2, h3, .h3, h4, .h4 {
   margin-top: -200px;
   border-radius: 7px;
   -webkit-box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1);
-  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1); }
+  box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1); 
+}
+
+.registrationtop {
+  z-index: 3;
+}
+
 
 .custom-block {
   margin-bottom: 30px; }

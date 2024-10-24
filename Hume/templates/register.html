@@ -125,38 +125,54 @@
 
 
 
-
+<!-- submit form -->
   <div class="untree_co-section">
     <div class="container">
 
       <div class="row mb-5 justify-content-center">
-        <div class="col-lg-5 mx-auto order-1" data-aos="fade-up" data-aos-delay="200">
-          <form action="#" class="form-box">
+        <div class="col-lg-5 mx-auto order-1 registrationtop" data-aos="fade-up" data-aos-delay="200">
+          <form method="POST" action="" class="form-box">
+            {% csrf_token %}
             <div class="row">
               <div class="col-12 mb-3">
-                <input type="text" class="form-control" placeholder="Full name">
+                <input type="text" name="name" class="form-control" placeholder="Full name" required>
               </div>
               <div class="col-12 mb-3">
-                <input type="text" class="form-control" placeholder="Email">
+                <input type="text" name="mobile_number" class="form-control" placeholder="Mobile number" required>
               </div>
               <div class="col-12 mb-3">
-                <input type="password" class="form-control" placeholder="Password">
+                <input type="text" name="email" class="form-control" placeholder="Email" required>
               </div>
               <div class="col-12 mb-3">
-                <input type="password" class="form-control" placeholder="Re-type Password">
+                <input type="password" name="password" class="form-control" placeholder="Password" required>
+              </div>
+              <div class="col-12 mb-3">
+                <input type="password" class="form-control" placeholder="Re-type Password" required>
+              </div>
+              <div class="col-12 mb-3">
+                <select name="role" class="form-control" required>
+                  <option value="">Select a role</option>
+                  <option value="STUDENTS">Student</option>
+                  <option value="RESEARCHER">Researcher</option>
+                  <option value="INSTITUTES">Institutes</option>
+                </select>
               </div>
 
-              <div class="col-12 mb-3">
-                <label class="control control--checkbox">
-                  <span class="caption">Accept our <a href="#">terms and conditions</a></span>
-                  <input type="checkbox" checked="checked" />
-                  <div class="control__indicator"></div>
-                </label>
-              </div>
 
               <div class="col-12">
                 <input type="submit" value="Send Message" class="btn btn-primary">
               </div>
+
+              {% if form.errors %}
+                  <div style="color: red;">
+                    {{ form.errors }}
+                  </div>
+                {% else %}
+                  <div style="color: green;">
+                    Account has been created successfully!
+                  </div>
+              {% endif %}
+              
             </div>
           </form>
         </div>
@@ -165,6 +181,9 @@
       
     </div>
   </div> <!-- /.untree_co-section -->
+  <!-- submit form end -->
+
+
 
   <div class="site-footer">
 

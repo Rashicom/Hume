@@ -1,62 +1,95 @@
+<!-- templates/map.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kerala Map</title>
+    <title>India Map</title>
+    
+    <!-- Include Leaflet.js -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
     <style>
-        #map { height: 100vh; } /* Fullscreen map */
-        body { margin: 0; }
+        #map {
+            height: 600px;
+            width: 100%;
+        }
+        .leaflet-container {
+            background: #fff;
+        }
     </style>
 </head>
 <body>
+    <h1>Interactive India Map</h1>
+    <div id="map"></div>
 
-<div id="map"></div>
+    <script>
+        // Initialize the map
+        var map = L.map('map').setView([22.9734, 78.6569], 5); // Centered on India
+        
+        // Add a tile layer (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 10,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
 
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        // Load the GeoJSON data for India states (ensure this is in static files)
+        fetch("{% static 'geojson/india_state_geo.json' %}")
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(geojsonData) {
+            // Define style for the state boundaries
+            function style(feature) {
+                return {
+                    fillColor: '#FFFFFF', // Initial fill color
+                    weight: 2,
+                    opacity: 1,
+                    color: '#000000', // Boundary color
+                    fillOpacity: 0.5
+                };
+            }
 
-<script>
-    // Initialize the map centered on Kerala
-    var map = L.map('map').setView([10.8505, 76.2711], 7); // Center Kerala
+            // Highlight feature on hover
+            function highlightFeature(e) {
+                var layer = e.target;
+                layer.setStyle({
+                    fillColor: '#ff7800',
+                    weight: 3,
+                    color: '#666',
+                    fillOpacity: 0.7
+                });
+            }
 
-    // Add a blank white tile layer to hide the world map
-    var blankTileLayer = L.tileLayer('', {
-        minZoom: 1,
-        maxZoom: 18,
-        bounds: L.latLngBounds([[-90, -180], [90, 180]]),
-        attribution: '' // No attribution needed for blank tiles
-    }).addTo(map);
+            // Reset highlight on mouseout
+            function resetHighlight(e) {
+                geojson.resetStyle(e.target);
+            }
 
-    // Define the GeoJSON style for Kerala districts
-    var geojsonStyle = {
-        "color": "#3388ff",
-        "weight": 2,
-        "opacity": 0.8,
-        "fillOpacity": 0.3,
-        "fillColor": "#3388ff"
-    };
+            // When the state is clicked, redirect to another page
+            function onStateClick(e) {
+                var stateName = e.target.feature.properties.name; // Assuming the state name is in the GeoJSON properties
+                var stateUrl = "/state/" + stateName; // Redirect to this URL (adjust as per your Django URL structure)
+                window.location.href = stateUrl;
+            }
 
-    // Load your GeoJSON for Kerala districts (replace with actual path)
-    fetch('path/to/your/kerala-districts.geojson')
-        .then(response => response.json())
-        .then(data => {
-            // Add GeoJSON layer for Kerala districts
-            L.geoJSON(data, {
-                style: geojsonStyle,
-                onEachFeature: function (feature, layer) {
-                    // Make each district clickable
-                    layer.on('click', function () {
-                        alert('You clicked on ' + feature.properties.name);
-                    });
-                }
+            // Attach interactivity to the states
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    click: onStateClick
+                });
+            }
+
+            // Add the GeoJSON layer to the map
+            var geojson = L.geoJson(geojsonData, {
+                style: style,
+                onEachFeature: onEachFeature
             }).addTo(map);
-
-            // Fit the map bounds to Kerala districts
-            map.fitBounds(L.geoJSON(data).getBounds());
         });
-
-</script>
-
+    </script>
 </body>
 </html>
