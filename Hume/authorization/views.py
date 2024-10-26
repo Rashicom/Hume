@@ -1,8 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
-from .forms import RegistrationForm, LoginForm
+from .forms import RegistrationForm, LoginForm, PrifileUpdate
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Account
 # Create your views here.
 
 
@@ -28,21 +30,15 @@ class Login(View):
                 login(request, user)
                 return render(request, 'login.html')    
             else:
-                login_form.add_error("mobile_number", "Invalid mobile_number or password")
-                return render(request, 'login.html', {"form": login_form})
+                return render(request, 'login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
         return render(request, 'login.html', {"form": login_form})
     def get(self, request):
         return render(request, 'login.html')
-    
-class News(View):
-    def get(self, request):
-        return render(request, 'news.html')
     
 class Register(View):
     def get(self, request):
         return render(request, 'register.html')
     def post(self, request):
-        print("neme :", request.POST.get('mobile_number'))
         reg_form = RegistrationForm(
             {
                 "mobile_number": request.POST.get('mobile_number'),
@@ -53,11 +49,36 @@ class Register(View):
             }
         )
         if not reg_form.is_valid():
-            print(reg_form.errors)
             return render(request, 'register.html', {"form":reg_form})
 
         return render(request, 'register.html')
-        
+
+
+class CollectorAccount(LoginRequiredMixin,View):
+    login_url = 'login'
+    def get(self, request):
+        user = request.user
+        if user.role != Account.UserRole.DATA_COLLECTOR:
+            return redirect(self.login_url)
+        return render(request, 'collector_account.html', {"user":user})
+    
+
+class EditAccount(LoginRequiredMixin, View):
+    login_url = 'login'
+    def post(self, request):
+        form = PrifileUpdate(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+        else:
+            print(form.errors)
+        return redirect("collector-account")
+
+
+class News(View):
+    def get(self, request):
+        return render(request, 'news.html')
+
 
 class Staff(View):
     def get(self, request):

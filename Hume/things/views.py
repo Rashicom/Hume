@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.views import View
 
-# Create your views here.
+
+class AddReadings(View):
+    """
+    Add rain and temperature readings
+    """
+    def post(self, request):
+        print("Add readings post request")
+        return redirect("collector-account")

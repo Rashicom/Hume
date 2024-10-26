@@ -29,4 +29,4 @@ class ThingsAdmin(admin.ModelAdmin):
 
 @admin.register(ThingsReadings)
 class ThingsReadingsAdmin(admin.ModelAdmin):
-    list_display = ('thing', 'reading_from', 'freading_till', 'rain_reading', 'temp_reading')
+    list_display = ('thing', 'reading_from', 'reading_till', 'rain_reading', 'temp_reading')

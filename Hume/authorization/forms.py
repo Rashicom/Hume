@@ -61,3 +61,8 @@ class LoginForm(forms.Form):
             'placeholder': 'Password'
         })
     )
+
+class PrifileUpdate(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ['name', 'email', 'mobile_number']

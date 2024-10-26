@@ -147,6 +147,11 @@
                 <input type="password" name="password" class="form-control" placeholder="Password">
               </div>
 
+              {% if error %}
+                  <div style="color: red;">
+                    {{ error }}
+                  </div>
+              {% endif %}
               {% if form.errors %}
                   <div style="color: red;">
                     {{ form.errors }}

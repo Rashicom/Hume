@@ -30,6 +30,11 @@ class Account(BaseModel,AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     objects = AccountManager()
+    def save(self, *args, **kwargs):
+        if self.pk is None or not self.password.startswith('pbkdf2_sha256$'):
+            # Only hash the password if it's not already hashed
+            self.set_password(self.password)
+        super().save(*args, **kwargs)
 
 
 

@@ -1,4 +1,5 @@
 from django.contrib.auth.models import BaseUserManager
+from django.contrib.auth.hashers import make_password
 
 class AccountManager(BaseUserManager):
     def create_user(self, mobile_number, password=None, **extra_fields):
