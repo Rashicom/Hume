@@ -115,7 +115,7 @@ AUTH_USER_MODEL = "authorization.Account"
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

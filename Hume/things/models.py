@@ -77,7 +77,7 @@ class Things(BaseModel):
 class ThingsReadings(BaseModel):
     thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name="readings")
     reading_from = models.DateTimeField()
-    reading_till = models.DateTimeField(auto_now_add=True)
+    reading_till = models.DateTimeField()
     rain_reading = models.FloatField(blank=True, null=True)
     temp_reading = models.FloatField(blank=True, null=True)
 

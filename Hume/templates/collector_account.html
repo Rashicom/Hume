@@ -240,13 +240,12 @@
                     </div>
                   </div>
                   
-                  
                   <div class="accordion-item mt-4">
                     <h2 class="mb-0">
-                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">Add Readings</button>
+                      <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="False" aria-controls="collapseThree">Add Readings</button>
                     </h2>
                     
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion_1">
+                    <div id="collapseThree" class="{% if not error and not form.errors %}collapse{% endif %}" aria-labelledby="headingThree" data-parent="#accordion_1">
                       <div class="accordion-body">
 
                         <form class="contact-form" action="{% url 'add-readings' %}" method="POST">
@@ -255,13 +254,13 @@
                                 <div class="col-md-6">
                                   <div class="form-group">
                                     <label class="" for="fname">Reading From</label>
-                                    <input type="text" class="form-control" id="fname" value="">
+                                    <input type="datetime-local" class="form-control", name="reading_from" id="fnameo">
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
                                     <label class="" for="lname">Reading Till</label>
-                                    <input type="text" class="form-control" id="fname" value="">
+                                    <input type="datetime-local" class="form-control" id="fname2" name="reading_till" value="">
                                   </div>
                                 </div>
                               </div>
@@ -269,13 +268,13 @@
                               <div class="col-md-6">
                                 <div class="form-group">
                                   <label class="" for="fname">Rain reading</label>
-                                  <input type="text" class="form-control" id="fname" value="">
+                                  <input type="text" class="form-control" id="fname3" name="rain_reading" value="">
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="form-group">
                                   <label class="" for="lname">Mesured in</label>
-                                  <select name="" id="select" class="custom-select">
+                                  <select id="select" name="rain_unit" class="custom-select">
                                     <option value="mm">MM</option>
                                     <option value="cm">CM</option>
                                   </select>
@@ -286,19 +285,29 @@
                                 <div class="col-md-6">
                                   <div class="form-group">
                                     <label class="" for="fname">Temperature reading</label>
-                                    <input type="text" class="form-control" id="fname" value="">
+                                    <input type="text" class="form-control" id="fname4" name="temp_reading" value="">
                                   </div>
                                 </div>
                                 <div class="col-md-6">
                                   <div class="form-group">
                                     <label class="" for="lname">Mesured in</label>
-                                    <select name="" id="select" class="custom-select">
-                                        <option value="">Degree celsius</option>
-                                        <option value="">Degree Fahrenheit</option>
+                                    <select id="select" name="temp_unit" class="custom-select">
+                                        <option value="Degree celsius">Degree celsius</option>
+                                        <option value="Degree Fahrenheit">Degree Fahrenheit</option>
                                     </select>
                                   </div>
                                 </div>
                               </div>
+                              {% if form.errors %}
+                                  <div style="color: red;">
+                                    {{ form.errors }}
+                                  </div>
+                              {% endif %}
+                              {% if error %}
+                                  <div style="color: red;">
+                                    {{ error }}
+                                  </div>
+                              {% endif %}
                             <button type="submit" class="btn btn-primary">Submit</button>
                           </form>
 
@@ -460,6 +469,23 @@
     <script src="{% static 'js/aos.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
 
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          // yester day local time
+          const ystrday = new Date()
+          ystrday.setUTCDate(ystrday.getUTCDate() - 1)
+          ystrday.setUTCHours(8, 0, 0, 0)
+          const yester_day  = ystrday.toISOString().slice(0, 16)
+
+          const today = new Date()
+          today.setUTCDate(today.getUTCDate())
+          today.setUTCHours(8, 0, 0, 0)
+          const today_date  = today.toISOString().slice(0, 16)
+
+          document.getElementById("fnameo").value = yester_day
+          document.getElementById("fname2").value = today_date
+      });
+  </script>
   </body>
 
   </html>
