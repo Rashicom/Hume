@@ -38,6 +38,7 @@ class AddReadings(LoginRequiredMixin,View):
         reading_till_utc = timezone.make_aware(datetime.strptime(reading_till, "%Y-%m-%dT%H:%M"), timezone.get_current_timezone())
         print("reading_from", reading_from_utc)
         print("reading_to", reading_till_utc)
+        instance = ThingsReadings.objects.filter(thing=thing, created_at__date = timezone.now().date()).first()
         form = ReadingsForm(
             {
                 "thing": thing,
@@ -45,10 +46,10 @@ class AddReadings(LoginRequiredMixin,View):
                 "reading_till":reading_till_utc,
                 "rain_reading": rain_standard_readings,
                 "temp_reading": temp_standard_readings,
-            }
+            },
+            instance=instance
         )
         if form.is_valid():
-            print("form is valie")
             form.save()
         else:
             return render(request, 'collector_account.html', {"form":form})
