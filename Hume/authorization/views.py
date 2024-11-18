@@ -9,12 +9,6 @@ from things.models import Things, ThingsReadings
 from django.utils import timezone
 
 
-# Home page
-class Home(View):
-    def get(self, request):
-        return render(request, 'index.html')
-
-
 # login pnage get and post
 class Login(View):
     form = LoginForm
