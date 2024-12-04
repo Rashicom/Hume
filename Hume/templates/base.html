@@ -94,31 +94,11 @@
         <div class="site-navigation text-center">
           <a href="{% url 'home' %}" class="logo menu-absolute m-0">HUME<span class="text-primary">.</span></a>
 
-          <ul class="js-clone-nav d-none d-lg-inline-block site-menu">
-            <li class="active"><a href="{% url 'home' %}">Home</a></li>
-            <li class="has-children">
-              <a href="#">DataLab</a>
-              <ul class="dropdown">
-                <li><a href="{% url 'elements' %}">Rain Pattern</a></li>
-                {% comment %} <li class="has-children">
-                  <a href="#">Menu Two</a>
-                  <ul class="dropdown">
-                    <li><a href="#">Sub Menu One</a></li>
-                    <li><a href="#">Sub Menu Two</a></li>
-                    <li><a href="#">Sub Menu Three</a></li>
-                  </ul>
-                </li> {% endcomment %}
-                <li><a href="#">Temperature</a></li>
-              </ul>
-            </li>
-            <li><a href="{% url 'staff' %}">Our Staff</a></li>
-            <li><a href="{% url 'news' %}">News</a></li>
-            <li><a href="{% url 'gallery' %}">Gallery</a></li>
-            <li><a href="{% url 'about' %}">About</a></li>
-            <li><a href="{% url 'contact' %}">Contact</a></li>
-          </ul>
+          {% block navigation-bar %}
+          
+          {% endblock navigation-bar %}
 
-          <a href="#" class="btn-book btn btn-secondary btn-sm menu-absolute">Enroll Now</a>
+          <a href="#" class="btn-book btn btn-secondary btn-sm menu-absolute">Weather Now</a>
 
           <a href="#" class="burger ml-auto float-right site-menu-toggle js-menu-toggle d-inline-block d-lg-none light" data-toggle="collapse" data-target="#main-navbar">
             <span></span>

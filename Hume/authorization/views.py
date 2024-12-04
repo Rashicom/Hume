@@ -98,10 +98,6 @@ class News(View):
     def get(self, request):
         return render(request, 'news.html')
 
-
-class Staff(View):
-    def get(self, request):
-        return render(request, 'staff.html')
     
 class About(View):
     def get(self, request):

@@ -9,7 +9,6 @@ urlpatterns = [
     path('edit-account/', views.EditAccount.as_view(), name='edit-account'),
     
     path('news/', views.News.as_view(), name='news'),
-    path('staff/', views.Staff.as_view(), name='staff'),
     path('about/', views.About.as_view(), name='about'),
     path('contact/', views.Contact.as_view(), name='contact'),
     path('elements/', views.Elements.as_view(), name='elements'),

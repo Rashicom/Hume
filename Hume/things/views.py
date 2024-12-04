@@ -53,7 +53,15 @@ class AddReadings(LoginRequiredMixin,View):
             form.save()
         else:
             return render(request, 'collector_account.html', {"form":form})
-        return redirect("collector-account")
+        return redirect("profile")
+
+
+class LiveWeather(View):
+    """
+    render all live weather data with data
+    """
+    def get(self, request):
+        return render(request,"liveweather.html")
 
 
 class Test(View):

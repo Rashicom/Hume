@@ -1,6 +1,33 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block navigation-bar %}
+  <ul class="js-clone-nav d-none d-lg-inline-block site-menu">
+    <li class="active"><a href="{% url 'home' %}">Home</a></li>
+    <li class="has-children">
+      <a href="#">DataLab</a>
+      <ul class="dropdown">
+        <li><a href="{% url 'elements' %}">Rain Pattern</a></li>
+        {% comment %} <li class="has-children">
+          <a href="#">Menu Two</a>
+          <ul class="dropdown">
+            <li><a href="#">Sub Menu One</a></li>
+            <li><a href="#">Sub Menu Two</a></li>
+            <li><a href="#">Sub Menu Three</a></li>
+          </ul>
+        </li> {% endcomment %}
+        <li><a href="#">Temperature</a></li>
+      </ul>
+    </li>
+    <li><a href="{% url 'live-weather' %}">Live Weather</a></li>
+    <li><a href="{% url 'news' %}">News</a></li>
+    <li><a href="{% url 'gallery' %}">Gallery</a></li>
+    <li><a href="{% url 'about' %}">About</a></li>
+    <li><a href="{% url 'contact' %}">Contact</a></li>
+  </ul>
+{% endblock navigation-bar %}
+
+
 {% block content %}
   <div class="untree_co-hero overlay" style="background-image: url('{% static 'images/hero-img-1-min.jpg' %}');">
 
@@ -247,7 +274,7 @@
         </div>
         <div class="col-12 col-sm-6 col-md-6 col-lg-4 mb-4 mb-lg-0">
           <div class="custom-media">
-            <a href="#"><img src="{% static 'images/img-school-3-min.jpg' %}" alt="Image" class="img-fluid"></a>
+            <a href="#"><img src="{% static 'images/liveweather.webp' %}" alt="Image" class="img-fluid"></a>
             <div class="custom-media-body">
               <div class="d-flex justify-content-between pb-3">
                 <div class="text-primary"><span class="uil uil-book-open"></span> <span>43 lesson</span></div>
@@ -445,7 +472,7 @@
                 <div class="accordion-body">
                   <div class="d-flex">
                     <div class="accordion-img mr-4">
-                      <img src="{% static 'images/img-school-3-min.jpg' %}" alt="Image" class="img-fluid">
+                      <img src="{% static 'images/liveweather.webp' %}" alt="Image" class="img-fluid">
                     </div>
                     <div>
                       <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane.</p>
