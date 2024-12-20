@@ -11,7 +11,8 @@ urlpatterns = [
     path('news/', views.News.as_view(), name='news'),
     path('about/', views.About.as_view(), name='about'),
     path('contact/', views.Contact.as_view(), name='contact'),
-    path('elements/', views.Elements.as_view(), name='elements'),
+    path('rain-pattern/', views.RainPattern.as_view(), name='rain-pattern'),
+    path('temp-pattern/', views.TemperaturePattern.as_view(), name='temp-pattern'),
     path('gallery/', views.Gallery.as_view(), name='gallery'),
 
     path('map/', views.TestMap.as_view(), name='map'),

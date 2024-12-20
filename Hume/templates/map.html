@@ -36,7 +36,7 @@
         }).addTo(map);
 
         // Load the GeoJSON data for India states (ensure this is in static files)
-        fetch("{% static 'geojson/india_state_geo.json' %}")
+        fetch("{% static 'geojson/dd.geojson' %}")
         .then(function(response) {
             return response.json();
         })

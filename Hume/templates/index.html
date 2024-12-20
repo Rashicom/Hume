@@ -7,7 +7,7 @@
     <li class="has-children">
       <a href="#">DataLab</a>
       <ul class="dropdown">
-        <li><a href="{% url 'elements' %}">Rain Pattern</a></li>
+        <li><a href="{% url 'rain-pattern' %}">Rain Pattern</a></li>
         {% comment %} <li class="has-children">
           <a href="#">Menu Two</a>
           <ul class="dropdown">
@@ -16,7 +16,7 @@
             <li><a href="#">Sub Menu Three</a></li>
           </ul>
         </li> {% endcomment %}
-        <li><a href="#">Temperature</a></li>
+        <li><a href="{% url 'temp-pattern' %}">Temperature</a></li>
       </ul>
     </li>
     <li><a href="{% url 'live-weather' %}">Live Weather</a></li>

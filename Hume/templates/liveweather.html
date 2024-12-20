@@ -7,7 +7,7 @@
     <li class="has-children">
       <a href="#">DataLab</a>
       <ul class="dropdown">
-        <li><a href="{% url 'elements' %}">Rain Pattern</a></li>
+        <li><a href="{% url 'rain-pattern' %}">Rain Pattern</a></li>
         {% comment %} <li class="has-children">
           <a href="#">Menu Two</a>
           <ul class="dropdown">
@@ -16,7 +16,7 @@
             <li><a href="#">Sub Menu Three</a></li>
           </ul>
         </li> {% endcomment %}
-        <li><a href="#">Temperature</a></li>
+        <li><a href="{% url 'temp-pattern' %}">Temperature</a></li>
       </ul>
     </li>
     <li class="active"><a href="{% url 'live-weather' %}">Live Weather</a></li>
@@ -34,16 +34,14 @@
         <div class="col-12">
           <div class="row justify-content-center ">
             <div class="col-lg-6 text-center ">
-              <h1 class="mb-4 heading text-white" data-aos="fade-up" data-aos-delay="100">School Staff</h1>
+              <h1 class="mb-4 heading text-white" data-aos="fade-up" data-aos-delay="100">Live Weather forcast</h1>
               <div class="mb-5 text-white desc mx-auto" data-aos="fade-up" data-aos-delay="200">
-                <p>Another free template by <a href="https://untree.co/" target="_blank" class="link-highlight">Untree.co</a>. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live.</p>
+                <p>Stay updated with real-time weather updates tailored to your location. Experience the live weather around you at a glance!</p>
               </div>
 
-              <p class="mb-0" data-aos="fade-up" data-aos-delay="300"><a href="#" class="btn btn-secondary">Explore courses</a></p>
+              <p class="mb-0" data-aos="fade-up" data-aos-delay="300"><a href="#" class="btn btn-secondary">Explore Datalab</a></p>
 
             </div>
-
-
           </div>
 
         </div>

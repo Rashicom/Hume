@@ -4,7 +4,7 @@
 {% block navigation-bar %}
   <ul class="js-clone-nav d-none d-lg-inline-block site-menu">
     <li><a href="{% url 'home' %}">Home</a></li>
-    <li class="has-children actove">
+    <li class="has-children active">
       <a href="#">DataLab</a>
       <ul class="dropdown">
         <li><a href="{% url 'rain-pattern' %}">Rain Pattern</a></li>
@@ -27,6 +27,7 @@
   </ul>
 {% endblock navigation-bar %}
 
+
 {% block content %}
   <div class="untree_co-hero overlay" style="background-image: url('{% static 'images/weatherlive.jpeg' %}');">
     <div class="container">
@@ -34,7 +35,7 @@
         <div class="col-12">
           <div class="row justify-content-center ">
             <div class="col-lg-6 text-center ">
-              <h1 class="mb-4 heading text-white" data-aos="fade-up" data-aos-delay="100">Rain pattern at a glance!</h1>
+              <h1 class="mb-4 heading text-white" data-aos="fade-up" data-aos-delay="100">Temperature pattern at a glance!</h1>
               <div class="mb-5 text-white desc mx-auto" data-aos="fade-up" data-aos-delay="200">
                 <p>Another free template by <a href="https://untree.co/" target="_blank" class="link-highlight">Untree.co</a>. Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live.</p>
               </div>
@@ -42,7 +43,6 @@
               <p class="mb-0" data-aos="fade-up" data-aos-delay="300"><a href="#" class="btn btn-secondary">Explore courses</a></p>
 
             </div>
-
 
           </div>
 

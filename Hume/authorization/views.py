@@ -107,9 +107,13 @@ class Contact(View):
     def get(self, request):
         return render(request, 'contact.html')
     
-class Elements(View):
+class RainPattern(View):
     def get(self, request):
-        return render(request, 'elements.html')
+        return render(request, 'rain.html')
+
+class TemperaturePattern(View):
+    def get(self, request):
+        return render(request, 'temperature.html')
 
 class Gallery(View):
     def get(self, request):
