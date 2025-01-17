@@ -83,3 +83,13 @@ class ThingsReadings(BaseModel):
 
     def __str__(self):
         return str(f"{self.thing}:{self.reading_from}")
+    
+
+
+# Rainfall
+# Temp
+# soil temp
+# river flow (flood level)
+
+
+# cumulative rainfall
