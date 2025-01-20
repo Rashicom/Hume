@@ -78,7 +78,9 @@ class Profile(LoginRequiredMixin,View):
                 "rain":today_readings.rain_reading if today_readings else 0,
                 "temp":today_readings.temp_reading if today_readings else 0
             }
-            print(data_contribution)
+        else:
+            data_contribution = {}
+        
         return render(request, 'collector_account.html', {"user":user, "mything":my_thing, "data":data_contribution})
     
 
