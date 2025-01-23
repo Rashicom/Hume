@@ -75,5 +75,14 @@ class Test(View):
 
 
 
+class RainPatternView(View):
+    def get(self, request):
+        divition = request.queryparams.get("location_type")
+        divition_value = request.queryparams.get("location_value")
+        map_type = request.queryparams.get("map_type")
+        
+
+        return render(request,"rain_pattern.html")
+
 
 

@@ -6,4 +6,5 @@ urlpatterns = [
     path('test/', views.Test.as_view(),),
     path('live-weather/', views.LiveWeather.as_view(), name="live-weather"),
     
+    
 ]
