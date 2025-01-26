@@ -80,7 +80,9 @@ class ThingsReadings(BaseModel):
     reading_till = models.DateTimeField()
     rain_reading = models.FloatField(blank=True, null=True)
     temp_reading = models.FloatField(blank=True, null=True)
-
+    soil_temp_reading = models.FloatField(blank=True, null=True)
+    soil_humidity_reading= models.FloatField(blank=True, null=True)
+    
     def __str__(self):
         return str(f"{self.thing}:{self.reading_from}")
     
@@ -88,8 +90,7 @@ class ThingsReadings(BaseModel):
 
 # Rainfall
 # Temp
-# soil temp
+# soil tempS
 # river flow (flood level)
-
 
 # cumulative rainfall
