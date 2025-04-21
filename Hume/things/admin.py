@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import States, Districts, Panjayath, Ward, Location, Things, ThingsReadings
+from django.utils.html import format_html
+
 
 @admin.register(States)
 class StatesAdmin(admin.ModelAdmin):
@@ -7,7 +9,13 @@ class StatesAdmin(admin.ModelAdmin):
 
 @admin.register(Districts)
 class DistrictsAdmin(admin.ModelAdmin):
-    list_display = ('district_name', 'state', 'boundary')
+    list_display = ('district_name', 'state', 'short_boundary')
+    def short_boundary(self, obj):
+        if obj.boundary:
+            return format_html("Polygon with {} coords", len(obj.boundary.coords[0]))
+        return "No boundary"
+
+    short_boundary.short_description = "Boundary"
 
 @admin.register(Panjayath)
 class PanjayathAdmin(admin.ModelAdmin):

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Map Listing</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-wkt/1.0.0/leaflet-wkt.min.js"></script>
+</head>
+<body>
+    <h2>Admin Map Listing and Operations</h2>
+    <hr>
+    <br>
+    <h3>States</h3>
+    <table>
+        <tr>
+            <th>uuid</th>
+            <th>state</th>
+            <th>actions</th>
+        </tr>
+
+        {% for state in states %}
+        <tr>
+            <td>{{ state.uuid }}</td>
+            <td>{{ state.state_name }}</td>
+            <td>
+                <form action="delete-state" method="post">
+                    {% csrf_token %}
+                    <input type="text" name="uuid" value="{{state.uuid}}" hidden>
+                    
+                    <button type="submit">Delete</button>
+                </form>
+                <a href="#">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form action="create-state" method="post">
+        {% csrf_token %}
+        <label for="statename">State Name</label>
+        <input type="text" name="state_name" id="state_name">
+        <button type="submit">Submit</button>
+    </form>
+
+
+    <hr>
+    <hr>
+
+    <h3>Districts</h3>
+    <table>
+        <tr>
+            <th>uuid</th>
+            <th>district</th>
+            <th>state</th>
+            <th>boundery</th>
+            <th>actions</th>
+        </tr>
+
+        {% for dist in districts %}
+        <tr>
+            <td>{{ dist.uuid }}</td>
+            <td>{{ dist.district_name }}</td>
+            <td>{{ dist.state }}
+            <td>
+                <div id="map-{{ forloop.counter }}" style="height: 300px; width: 300px;"></div>
+                <script>
+                    // Wrap the map initialization in a self-executing function
+                    (function() {
+                        var map = L.map('map-{{ forloop.counter }}').setView([51.505, -0.09], 13);
+                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            maxZoom: 19,
+                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        }).addTo(map);
+                        
+                        // Optional: Add boundaries or markers if needed
+                        // Example:
+                        var polygon_cords = "{{dist.polygon|safe}}"
+                        var f = JSON.parse(polygon_cords)
+                        var polygon = L.polygon(f).addTo(map);
+                        
+                        // Adjust map bounds to fit all polygons
+                        map.fitBounds(polygon.getBounds());
+                    })();
+                    
+                </script>
+            </td>
+            <td>
+                <a href="#">Edit</a>
+                <a href='{% url "delete-district" dist.uuid %}'>Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <form action="create-district" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="district_name">District Name</label>
+        <input type="text" name="district_name" id="district_name">
+        <label for="state">State List</label>
+        <select name="state" id="state">
+            {% for state in states %}
+            <option value="{{ state.uuid }}">{{ state.state_name }}</option>
+            {% endfor %}
+        </select>
+        <label for="boundary">Boundary</label>
+        <input type="file" name="boundary-file" id="boundary-file">
+        <label for="statename">Geojson District field name </label>
+        <input type="text" name="geojson_district_field_name" id="geojson_district_field_name">
+        <button type="submit">Submit</button>
+    </form>
+
+    <hr>
+    <hr>
+
+    <h3>Panjayath</h3>
+    <table>
+        <tr>
+            <th>uuid</th>
+            <th>Panjayath</th>
+            <th>state</th>
+            <th>district</th>
+            <th>boundary</th>
+            <th>actions</th>
+        </tr>
+
+        {% for pjth in panjayaths %}
+        <tr>
+            <td>{{ pjth.uuid }}</td>
+            <td>{{ pjth.panjayath_name }}</td>
+            <td>{{ pjth.state }}</td>
+            <td>{{ pjth.district }}</td>
+            <td>{{ pjth.boundary }}</td>
+            <td>
+                <a href="#">Edit</a>
+                <a href="#">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <hr>
+    <hr>
+
+    <h3>Ward</h3>
+    <table>
+        <tr>
+            <th>uuid</th>
+            <th>ward</th>
+            <th>state</th>
+            <th>district</th>
+            <th>panjayath</th>
+            <th>boundary</th>
+            <th>actions</th>
+        </tr>
+
+        {% for ward in wards %}
+        <tr>
+            <td>{{ ward.uuid }}</td>
+            <td>{{ ward.ward_name }}</td>
+            <td>{{ ward.state }}</td>
+            <td>{{ ward.district }}</td>
+            <td>{{ ward.panjayath }}</td>
+            <td>{{ ward.boundary }}</td>
+            <td>
+                <a href="#">Edit</a>
+                <a href="#">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr>
+    <hr>
+
+    <h3>Location</h3>
+    <table>
+        <tr>
+            <th>uuid</th>
+            <th>location</th>
+            <th>state</th>
+            <th>district</th>
+            <th>panjayath</th>
+            <th>ward</th>
+            <th>boundary</th>
+            <th>actions</th>
+        </tr>
+        
+        {% for loc in locations %}
+        <tr>
+            <td>{{ loc.uuid }}</td>
+            <td>{{ loc.location_name }}</td>
+            <td>{{ loc.state }}</td>
+            <td>{{ loc.district }}</td>
+            <td>{{ loc.panjayath }}</td>
+            <td>{{ loc.ward }}</td>
+            <td>{{ loc.boundary }}</td>
+            <td>
+                <a href="#">Edit</a>
+                <a href="#">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+
+</body>
+</html>

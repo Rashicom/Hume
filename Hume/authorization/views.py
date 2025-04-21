@@ -2,17 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import View
 from .forms import RegistrationForm, LoginForm, PrifileUpdate
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Account
-# Create your views here.
+from things.models import Things, ThingsReadings
+from django.utils import timezone
 
 
-class Home(View):
-    def get(self, request):
-        return render(request, 'index.html')
-
-
+# login pnage get and post
 class Login(View):
     form = LoginForm
     def post(self, request):
@@ -28,13 +25,20 @@ class Login(View):
             user = authenticate(request, mobile_number=mobile_number, password=password)
             if user is not None:
                 login(request, user)
-                return render(request, 'login.html')    
+                return redirect("profile")
             else:
                 return render(request, 'login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
         return render(request, 'login.html', {"form": login_form})
     def get(self, request):
         return render(request, 'login.html')
     
+# logout
+class Logout(View):
+    def get(self, request):
+        logout(request)
+        return redirect('login')
+
+# register user
 class Register(View):
     def get(self, request):
         return render(request, 'register.html')
@@ -54,13 +58,30 @@ class Register(View):
         return render(request, 'register.html')
 
 
-class CollectorAccount(LoginRequiredMixin,View):
+# collector account
+class Profile(LoginRequiredMixin,View):
     login_url = 'login'
     def get(self, request):
         user = request.user
         if user.role != Account.UserRole.DATA_COLLECTOR:
-            return redirect(self.login_url)
-        return render(request, 'collector_account.html', {"user":user})
+            return render(request, 'user_account.html')
+
+        # data to to show in profile
+        my_thing = Things.objects.filter(collector=user).last()
+        month_first = timezone.now().date().replace(day=1)
+        if my_thing:
+            readings = my_thing.readings.all()
+            today_readings = readings.filter(created_at__date=timezone.now().date()).last()
+            data_contribution = {
+                "total_collected":len(readings),
+                "collected_this_month":len(readings.filter(updated_at__date__gt=month_first)),
+                "rain":today_readings.rain_reading if today_readings else 0,
+                "temp":today_readings.temp_reading if today_readings else 0
+            }
+        else:
+            data_contribution = {}
+        
+        return render(request, 'collector_account.html', {"user":user, "mything":my_thing, "data":data_contribution})
     
 
 class EditAccount(LoginRequiredMixin, View):
@@ -72,17 +93,13 @@ class EditAccount(LoginRequiredMixin, View):
             form.save()
         else:
             print(form.errors)
-        return redirect("collector-account")
+        return redirect("profile")
 
 
 class News(View):
     def get(self, request):
         return render(request, 'news.html')
 
-
-class Staff(View):
-    def get(self, request):
-        return render(request, 'staff.html')
     
 class About(View):
     def get(self, request):
@@ -92,9 +109,13 @@ class Contact(View):
     def get(self, request):
         return render(request, 'contact.html')
     
-class Elements(View):
+class RainPattern(View):
     def get(self, request):
-        return render(request, 'elements.html')
+        return render(request, 'rain.html')
+
+class TemperaturePattern(View):
+    def get(self, request):
+        return render(request, 'temperature.html')
 
 class Gallery(View):
     def get(self, request):

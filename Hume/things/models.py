@@ -3,6 +3,9 @@ from django.conf import settings
 from django.contrib.gis.db import models
 
 
+# json
+# https://github.com/geohacker/kerala/blob/master/geojsons
+
 # States
 class States(BaseModel):
     state_name = models.CharField(max_length=50)
@@ -80,6 +83,17 @@ class ThingsReadings(BaseModel):
     reading_till = models.DateTimeField()
     rain_reading = models.FloatField(blank=True, null=True)
     temp_reading = models.FloatField(blank=True, null=True)
-
+    soil_temp_reading = models.FloatField(blank=True, null=True)
+    soil_humidity_reading= models.FloatField(blank=True, null=True)
+    
     def __str__(self):
         return str(f"{self.thing}:{self.reading_from}")
+    
+
+
+# Rainfall
+# Temp
+# soil tempS
+# river flow (flood level)
+
+# cumulative rainfall
