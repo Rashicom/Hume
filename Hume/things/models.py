@@ -3,6 +3,9 @@ from django.conf import settings
 from django.contrib.gis.db import models
 
 
+# json
+# https://github.com/geohacker/kerala/blob/master/geojsons
+
 # States
 class States(BaseModel):
     state_name = models.CharField(max_length=50)
