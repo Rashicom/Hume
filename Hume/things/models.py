@@ -20,7 +20,19 @@ class Districts(BaseModel):
 
     def __str__(self):
         return str(self.district_name)
-    
+
+
+class LocalAuthority(BaseModel):
+    class AuthorityType(models.TextChoices):
+        MUNICIPAL_CORPORATION = "municipal_corporation"
+        MUNICIPALITY = "municipality"
+        GRAM_PANCHAYATH = "gram_panchayat"
+    authority_type = models.CharField(max_length=50, choices=AuthorityType)
+    state = models.ForeignKey(States, on_delete=models.CASCADE)
+    district = models.ForeignKey(Districts, on_delete=models.CASCADE)
+    boundary = models.PolygonField(srid=4326, blank=True, null=True)
+
+
 # panjayathas
 class Panjayath(BaseModel):
     panjayath_name = models.CharField(max_length=100)
