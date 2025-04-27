@@ -9,7 +9,7 @@ from rest_framework.exceptions import ValidationError
 from datetime import datetime
 from django.utils import timezone
 
-from things.models import Things, ThingsReadings, States, Districts, Panjayath, Ward, Location
+from things.models import Things, ThingsReadings, States, Districts, LocalAuthority, Ward, Location
 from .serializers import ThingsReadingSerializer
 from authorization.models import Account
 from things.models import Things, ThingsReadings

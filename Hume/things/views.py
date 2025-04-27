@@ -3,7 +3,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import ReadingsForm
 from django.utils import timezone
-from .models import Things, ThingsReadings, States, Districts, Panjayath, Ward, Location
+from .models import Things, ThingsReadings, States, Districts, Ward, Location
 from django.http import JsonResponse
 from datetime import datetime
 from .utils import len_to_mm, temp_to_degree
