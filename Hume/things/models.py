@@ -33,21 +33,11 @@ class LocalAuthority(BaseModel):
     boundary = models.PolygonField(srid=4326, blank=True, null=True)
 
 
-# panjayathas
-class Panjayath(BaseModel):
-    panjayath_name = models.CharField(max_length=100)
-    state = models.ForeignKey(States, on_delete=models.CASCADE)
-    district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    boundary = models.PolygonField(srid=4326, blank=True, null=True)
-
-    def __str__(self):
-        return str(self.panjayath_name)
-    
 class Ward(BaseModel):
     ward_name = models.CharField(max_length=100)
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    panjayath = models.ForeignKey(Panjayath, on_delete=models.CASCADE)
+    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
     boundary = models.PolygonField(srid=4326, blank=True, null=True)
 
     def __str__(self):
@@ -57,7 +47,7 @@ class Location(BaseModel):
     location_name = models.CharField(max_length=100)
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    panjayath = models.ForeignKey(Panjayath, on_delete=models.CASCADE)
+    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
     ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
     boundary = models.PolygonField(srid=4326, blank=True, null=True)
 
@@ -80,7 +70,7 @@ class Things(BaseModel):
     )
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    panjayath = models.ForeignKey(Panjayath, on_delete=models.CASCADE)
+    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
     ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     location_cordinate = models.PointField(srid=4326)

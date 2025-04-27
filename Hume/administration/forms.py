@@ -1,5 +1,5 @@
 from django import forms
-from things.models import States, Districts, Panjayath, Ward, Location
+from things.models import States, Districts, Ward, Location
 
 class StateForm(forms.ModelForm):
     class Meta:
