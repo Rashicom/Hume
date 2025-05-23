@@ -55,7 +55,7 @@ class Register(View):
         if not reg_form.is_valid():
             return render(request, 'register.html', {"form":reg_form})
 
-        return render(request, 'register.html')
+        return render(request, 'login.html')
 
 
 # collector account
