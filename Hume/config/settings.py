@@ -29,10 +29,11 @@ environ.Env.read_env(os.path.join(BASE_DIR,"..", '.env'))
 SECRET_KEY = env("SECRET_KEY")
 GDAL_LIBRARY_PATH="/opt/homebrew/Cellar/gdal/3.11.0/lib/libgdal.dylib"
 GEOS_LIBRARY_PATH="/opt/homebrew/Cellar/geos/3.13.1/lib/libgeos_c.dylib"
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = env("DEBUG", default=False)
+
+ALLOWED_HOSTS = env("ALLOWED_HOSTS", default=[])
 
 
 # Application definition
