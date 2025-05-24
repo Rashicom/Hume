@@ -70,9 +70,9 @@ class Things(BaseModel):
     )
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
-    ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE, blank=True, null=True)
+    ward = models.ForeignKey(Ward, on_delete=models.CASCADE, blank=True, null=True)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
     location_cordinate = models.PointField(srid=4326)
     is_active = models.BooleanField(default=True)
 
