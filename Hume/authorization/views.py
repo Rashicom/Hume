@@ -131,3 +131,32 @@ class TestMap(View):
 
         context = {'coordinates': coordinates}
         return render(request, 'map.html')
+    
+
+
+class AdminLogin(View):
+    form = LoginForm
+    def get(self, request):
+        return render(request, "admin_login.html")
+    
+    def post(self, request):
+        login_form = LoginForm(
+            {
+                "mobile_number": request.POST.get('mobile_number'),
+                "password": request.POST.get('password'),
+            }
+        )
+        if login_form.is_valid():
+            mobile_number = login_form.cleaned_data.get("mobile_number")
+            password = login_form.cleaned_data.get("password")
+            user = authenticate(request, mobile_number=mobile_number, password=password)
+            if not user:
+                return render(request, 'admin_login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
+            if user.role != Account.UserRole.ADMIN:
+                return render(request, 'admin_login.html', {"form": login_form, "error":"Permission blocked"})
+            if user is not None:
+                login(request, user)
+                return redirect("profile")
+            else:
+                return render(request, 'admin_login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
+        return render(request, 'admin_login.html', {"form": login_form})

@@ -14,7 +14,7 @@ class Account(BaseModel,AbstractBaseUser, PermissionsMixin):
         INSTITUTES = "INSTITUTES"
     
     mobile_number = models.CharField(max_length=12, unique=True)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(blank=True, null=True)
     name = models.CharField(max_length=50)
     role = models.CharField(max_length=50, choices=UserRole, default=UserRole.DATA_COLLECTOR)
 
