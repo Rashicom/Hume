@@ -1,3 +1,100 @@
 {% extends "admin_base.html" %}
 {% load static %}
 {% block data %}active{% endblock data %}
+
+{% block content %}
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+              <div class="card">
+                <div class="d-flex align-items-end row">
+                  <div class="col-sm-9">
+                    <div class="card-body">
+                      <h5 class="card-title text-primary">Upload watsapp file ! 🎉</h5>
+                      <p class="mb-4">
+                        Upload your watsapp file, let me take a look in to it.
+                      </p>
+                      <label for="formFile" class="form-label">File</label>
+                      <input class="form-control mb-4" type="file" id="formFile" />
+                      <button type="submit" class="btn btn-primary me-2">Submit</button>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 text-center text-sm-left">
+                    <div class="card-body pb-0 px-0 px-md-4">
+                      <img
+                        src="{% static 'assets/img/illustrations/man-with-laptop-light.png' %}"
+                        height="140"
+                        alt="View Badge User"
+                        data-app-dark-img="illustrations/man-with-laptop-dark.png"
+                        data-app-light-img="illustrations/man-with-laptop-light.png"
+                      />
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="card">
+        <h5 class="card-header">Varify data</h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Number</th>
+                <th>Message</th>
+                <th>Rain</th>
+                <th>Temp Min</th>
+                <th>Temp Max</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              <tr>
+                <td>12/2/2024</td>
+                <td>9846142484</td>
+                <td>hello here 12 mm and 34 min and 36 max</td>
+                <td>
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="rain"
+                      name="rain"
+                      value="12"
+                      placeholder="Rain"
+                    />
+                </td>
+                <td>
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="mintemp"
+                      name="min_temp"
+                      value="34"
+                      placeholder="Minimum temp"
+                    />
+                </td>
+                <td>
+                    <input
+                      class="form-control"
+                      type="number"
+                      id="maxtemp"
+                      name="max_temp"
+                      value="36"
+                      placeholder="Maximum temp"
+                    />
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+</div>
+{% endblock content %}
