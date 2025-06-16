@@ -16,6 +16,7 @@
   // --------------------------------------------------------------------
   const totalRevenueChartEl = document.querySelector('#totalRevenueChart'),
     totalRevenueChartOptions = {
+      // fetch data from api and pass to data
       series: [
         {
           name: '2021',

@@ -8,6 +8,40 @@ from django.db import transaction
 from django.core.serializers import serialize
 
 
+
+
+class AdminDash(View):
+    """
+    Admin Index View
+    """
+    def get(self, request):
+        return render(request, 'admin_index.html')
+
+class AccountsManagement(View):
+    """
+    Accounts Management View
+    """
+    def get(self, request):
+        return render(request, 'admin_accounts.html')
+
+class ThingsManagement(View):
+    """
+    Things Management View
+    """
+    def get(self, request):
+        return render(request, 'admin_things.html')
+
+
+class DataManagement(View):
+    """
+    Data Management View
+    """
+    def get(self, request):
+        return render(request, 'admin_data.html')
+
+
+
+
 class AdminMapListingView(View):
     """
     Admin Map Listing View

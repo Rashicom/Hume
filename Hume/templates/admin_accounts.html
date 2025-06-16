@@ -1,0 +1,148 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block accounts %}active{% endblock accounts %}
+
+
+{% block content %}
+        <!-- Content wrapper -->
+        <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+                <h5 class="">Manage accounts</h5>
+
+                <div class="row">
+                <div class="col-lg-12 mb-4 order-0">
+                  <div class="card">
+                    <div class="d-flex align-items-end row">
+                      <div class="col-sm-9">
+                        <div class="card-body">
+                          <h5 class="card-title text-primary">Create User ! 🎉</h5>
+                          <p class="mb-4">
+                            Create user and map things from data section
+                          </p>
+
+                            <form id="formAccountSettings" method="POST" onsubmit="return false">
+                              <div class="row">
+                                <div class="mb-3 col-md-6">
+                                  <label for="firstName" class="form-label">Name</label>
+                                  <input
+                                    class="form-control"
+                                    type="text"
+                                    id="firstName"
+                                    name="firstName"
+                                    value=""
+                                    placeholder="john"
+                                    autofocus
+                                  />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                  <label for="email" class="form-label">Email</label>
+                                  <input
+                                    class="form-control"
+                                    type="text"
+                                    id="email"
+                                    name="email"
+                                    value=""
+                                    placeholder="john.doe@example.com"
+                                  />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                  <label for="mobile_number" class="form-label">Phone Number</label>
+                                  <input
+                                      type="text"
+                                      id="phoneNumber"
+                                      name="phoneNumber"
+                                      class="form-control"
+                                      placeholder="202 555 0111"
+                                    />
+                                </div>
+                                <div class="mb-3 col-md-6">
+                                  <label for="organization" class="form-label">Organization</label>
+                                  <select id="language" class="select2 form-select">
+                                    <option value="">Select Language</option>
+                                    <option value="en">English</option>
+                                    <option value="fr">French</option>
+                                    <option value="de">German</option>
+                                    <option value="pt">Portuguese</option>
+                                  </select>
+                                </div>
+                            
+                            
+
+                              </div>
+                              <div class="mt-2">
+                                <button type="submit" class="btn btn-primary me-2">Save changes</button>
+                                <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                              </div>
+                            </form>
+                        </div>
+                      </div>
+                      <div class="col-sm-3 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                          <img
+                            src="{% static 'assets/img/illustrations/man-with-laptop-light.png' %}"
+                            height="140"
+                            alt="View Badge User"
+                            data-app-dark-img="illustrations/man-with-laptop-dark.png"
+                            data-app-light-img="illustrations/man-with-laptop-light.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+            </div>
+        </div>
+
+ 
+        <div class="content-wrapper">
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <!-- Hoverable Table rows -->
+              <div class="card">
+                <h5 class="card-header">Accounts</h5>
+                <div class="table-responsive text-nowrap">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>Phone</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Thing</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                    {% comment %} iterate users and list {% endcomment %}
+                      <tr>
+                        <td>
+                          <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>9876543210</strong>
+                        </td>
+                        <td>Jerry Milton</td>
+                        <td>
+                          <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>test@gmail.com</strong>
+                        </td>
+                        <td><span class="badge bg-label-warning me-1">Location</span></td>
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                              <a class="dropdown-item" href="javascript:void(0);"
+                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
+                              >
+                              <a class="dropdown-item" href="javascript:void(0);"
+                                ><i class="bx bx-trash me-1"></i> Delete</a
+                              >
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+        </div>
+    </div>
+{% endblock content %}
