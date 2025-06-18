@@ -9,9 +9,10 @@ urlpatterns = [
 
     path("create-district", views.CreateDistrict.as_view(), name="create-district"),
 
-
     path("dashboard", views.AdminDash.as_view(), name="admin-dashboard"),
     path("accounts", views.AccountsManagement.as_view(), name="admin-accounts"),
     path("things", views.ThingsManagement.as_view(), name="admin-things"),
-    path("data", views.DataManagement.as_view(), name="admin-data")
+    path("data", views.DataManagement.as_view(), name="admin-data"),
+    path("readings", views.ReadingsManagement.as_view(), name="admin-readings"),
+    
 ]

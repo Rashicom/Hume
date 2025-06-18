@@ -18,7 +18,7 @@
                       </p>
                       <label for="formFile" class="form-label">File</label>
                       <input class="form-control mb-4" type="file" id="formFile" />
-                      <button type="submit" class="btn btn-primary me-2">Submit</button>
+                      <button type="submit" class="btn btn-primary me-2" id="submitFileBtn">Submit</button>
                     </div>
                   </div>
                   <div class="col-sm-3 text-center text-sm-left">
@@ -43,7 +43,7 @@
       <div class="card">
         <h5 class="card-header">Varify data</h5>
         <div class="table-responsive text-nowrap">
-          <table class="table">
+          <table class="table" id="weatherTable">
             <thead>
               <tr>
                 <th>Date</th>
@@ -60,41 +60,363 @@
                 <td>9846142484</td>
                 <td>hello here 12 mm and 34 min and 36 max</td>
                 <td>
-                    <input
-                      class="form-control"
-                      type="number"
-                      id="rain"
-                      name="rain"
-                      value="12"
-                      placeholder="Rain"
-                    />
+                    <input class="form-control" type="number" id="rain" name="rain" value="12" placeholder="Rain"/>
                 </td>
                 <td>
-                    <input
-                      class="form-control"
-                      type="number"
-                      id="mintemp"
-                      name="min_temp"
-                      value="34"
-                      placeholder="Minimum temp"
-                    />
+                    <input class="form-control" type="number" id="mintemp" name="min_temp" value="34" placeholder="Minimum temp"/>
                 </td>
                 <td>
-                    <input
-                      class="form-control"
-                      type="number"
-                      id="maxtemp"
-                      name="max_temp"
-                      value="36"
-                      placeholder="Maximum temp"
-                    />
+                    <input class="form-control" type="number" id="maxtemp" name="max_temp" value="36" placeholder="Maximum temp"/>
+                </td>
+              </tr>
+              <tr>
+                <td>12/2/2024</td>
+                <td>9846142484</td>
+                <td>hello here 12 mm and 34 min and 36 max</td>
+                <td>
+                    <input class="form-control" type="number" id="rain" name="rain" value="12" placeholder="Rain"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="mintemp" name="min_temp" value="34" placeholder="Minimum temp"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="maxtemp" name="max_temp" value="36" placeholder="Maximum temp"/>
                 </td>
               </tr>
             </tbody>
           </table>
+          
         </div>
+        <div class="row">
+            <div class="col-md-3">
+                 <button type="submit" class="btn btn-primary m-4">Submit</button>
+            </div>
+        </div>
+       
       </div>
+      
     </div>
 
 </div>
+
+<script>
+    document.getElementById("submitFileBtn").addEventListener("click", function () {
+        console.log("entent triggered")
+        const fileInput = document.getElementById("formFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select a file");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const text = e.target.result;
+            // extract message
+            const lines = text.split(/\r?\n/); // Split lines
+            
+            // process and extract lines
+            const messages = extractData(lines);
+
+            // retrive values from message
+            const { for_update_list, invalied_messages } = processData(messages);
+
+            // prepare rendering elements
+            renderEditableTable(for_update_list)
+
+            // process message
+            // render to table
+        };
+        reader.readAsText(file);
+    });
+
+    function normalize(text) {
+      return text.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function extractData(lines) {
+        const datePattern = /\d{1,4}[-./]\d{1,4}[-./]\d{1,4}/;
+        const messageList = [];
+        const pattern = /(\d{2}\/\d{2}\/\d{4}), (\d{2}:\d{2}) - ([^:]+): (.*)/;
+
+        let i = 0;
+        const len = lines.length;
+
+        while (i < len) {
+          const line = lines[i];
+        
+          if (line === "\n" || line.trim() === "") {
+            i++;
+            continue;
+          }
+      
+          const match = line.match(pattern);
+      
+          if (match) {
+            const [_, date, time, messageFrom, messageContentStart] = match;
+            const dateTimeStr = `${date} ${time}`;
+            const dateTimeObj = new Date(
+              dateTimeStr.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            );
+
+            i++;
+            const msgLines = [];
+
+            // Accumulate continuation lines (until next message pattern)
+            while (i < len && !pattern.test(lines[i])) {
+              msgLines.push(lines[i]);
+              i++;
+            }
+        
+            let fullMessage = messageContentStart + " " + msgLines.join(" ");
+            fullMessage = fullMessage.replace(/\s+/g, " ").trim();
+            fullMessage = fullMessage.replace(" \n ", " ").trim();
+        
+            messageList.push({
+              from: messageFrom,
+              time_stamp: dateTimeObj,
+              message_content: normalize(fullMessage),
+            });
+          } else {
+            i++;
+          }
+        }
+    
+        return messageList;
+    }
+
+
+
+    function getData(txt) {
+        let i = 0;
+        let pointer = 0;
+        let digits = [];
+        const data = { rain: [], time: [], temp: [] };
+
+        while (i < txt.length) {
+          const char = txt[i];
+        
+          if (/\d/.test(char)) {
+            pointer = i;
+
+            // Read full number or time (e.g., "10.5", "8:30")
+            while (i < txt.length && "1234567890.:".includes(txt[i])) {
+              i++;
+            }
+        
+            digits.push(txt.slice(pointer, i));
+        
+            // Skip spaces
+            while (i < txt.length && txt[i] === " ") {
+              i++;
+            }
+        
+            const unitCandidates = txt.slice(i);
+            const rainUnits = ["mm", "m.m", "m m", "മീ.മീ", "മീമീ", "മി.മി", "മിമി"];
+            const timeUnits = ["pm", "p.m", "am", "a.m"];
+        
+            const isRain = rainUnits.some(unit => unitCandidates.startsWith(unit));
+            const isTime = timeUnits.some(unit => unitCandidates.startsWith(unit));
+        
+            if (isRain) {
+              let rainLevel = digits.join("").trim().replace(":", ".");
+              if (rainLevel.endsWith(".") || rainLevel.endsWith(":")) {
+                rainLevel = rainLevel.slice(0, -1);
+              }
+              data.rain.push({ value: parseFloat(rainLevel), unit: "mm" });
+          
+            } else if (isTime) {
+              let timeValue = digits.join("").trim();
+              if (timeValue.endsWith(".") || timeValue.endsWith(":")) {
+                timeValue = timeValue.slice(0, -1);
+              }
+          
+              const isPM = timeUnits.slice(0, 2).some(unit => unitCandidates.startsWith(unit));
+              data.time.push({ value: timeValue, unit: isPM ? "pm" : "am" });
+          
+            } else if (digits[0].includes(":")) {
+              // Fallback time format (e.g., "8:30" with no am/pm)
+              let timeValue = digits.join("").trim();
+              if (timeValue.endsWith(".")) {
+                timeValue = timeValue.slice(0, -1);
+              }
+              data.time.push({ value: timeValue, unit: "am" });
+          
+            } else {
+              // Temperature fallback
+              let tempValue = digits.join("").trim();
+              if (tempValue.endsWith(".") || tempValue.endsWith(":")) {
+                tempValue = tempValue.slice(0, -1);
+              }
+              if (!isNaN(tempValue) && data.temp.length < 2) {
+                data.temp.push(parseFloat(tempValue));
+              }
+            }
+        
+            digits = [];
+        
+          } else {
+            i++;
+            pointer = i;
+          }
+        }
+        return data;
+    }
+
+
+    function processData(messageList) {
+        const datePattern = /\d{1,4}[-./]\d{1,4}[-./]\d{1,4}/g;
+        const forUpdateList = [];
+        const invalidMessages = [];
+
+        for (const message of messageList) {
+          let msg = message.message_content;
+        
+          // Match date patterns
+          const dates = msg.match(datePattern) || [];
+        
+          if (dates.length === 2) {
+            // Reject messages that span two dates
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Multiple day compaigned entry cannot be accepted"
+            });
+            continue;
+          }
+        
+          // Remove found dates from message
+          for (const dt of dates) {
+            msg = msg.replace(dt, " ");
+          }
+        
+          let data;
+          try {
+            data = getData(msg);
+          } catch (e) {
+            console.error(e);
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Invalied data to read"
+            });
+            continue;
+          }
+        
+          // Rain validation
+          const rains = (data.rain || []).map(rn => rn.value);
+          if (rains.length > 1) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Multiple rain measurements cannot be accepted"
+            });
+            continue;
+          } else if (rains.length === 0) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "No rain mesurements found"
+            });
+            continue;
+          }
+          const rain = rains[0];
+        
+          // Temperature validation
+          const temps = data.temp || [];
+          let max_temp = null;
+          let min_temp = null;
+        
+          if (temps.length > 2) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Cannot retrive temperature data"
+            });
+          } else if (temps.length > 0) {
+            max_temp = Math.max(...temps);
+            min_temp = Math.min(...temps);
+          }
+        
+          // Final valid data
+          forUpdateList.push({
+            from: message.from,
+            message_content: message.message_content,
+            rain: rain,
+            max_temp: max_temp,
+            min_temp: min_temp,
+          });
+        }
+        return {
+          for_update_list: forUpdateList,
+          invalied_messages: invalidMessages
+        };
+    }
+
+
+    function renderEditableTable(forUpdateList) {
+      const tbody = document.querySelector('#weatherTable tbody');
+      tbody.innerHTML = ""; // clear previous content
+
+      for (const item of forUpdateList) {
+        const row = document.createElement("tr");
+      
+        // Date column (you can adjust this if you want actual date, currently using timestamp)
+        const date = item.time_stamp
+          ? new Date(item.time_stamp).toLocaleDateString("en-GB")
+          : "-";
+        const dateCell = document.createElement("td");
+        dateCell.textContent = date;
+      
+        const fromCell = document.createElement("td");
+        fromCell.textContent = item.from;
+      
+        const messageCell = document.createElement("td");
+        messageCell.textContent = item.message_content;
+      
+        const rainInputCell = document.createElement("td");
+        const rainInput = document.createElement("input");
+        rainInput.className = "form-control";
+        rainInput.type = "number";
+        rainInput.name = "rain";
+        rainInput.value = item.rain ?? "";
+        rainInput.placeholder = "Rain";
+        rainInputCell.appendChild(rainInput);
+      
+        const minTempInputCell = document.createElement("td");
+        const minTempInput = document.createElement("input");
+        minTempInput.className = "form-control";
+        minTempInput.type = "number";
+        minTempInput.name = "min_temp";
+        minTempInput.value = item.min_temp ?? "";
+        minTempInput.placeholder = "Minimum temp";
+        minTempInputCell.appendChild(minTempInput);
+      
+        const maxTempInputCell = document.createElement("td");
+        const maxTempInput = document.createElement("input");
+        maxTempInput.className = "form-control";
+        maxTempInput.type = "number";
+        maxTempInput.name = "max_temp";
+        maxTempInput.value = item.max_temp ?? "";
+        maxTempInput.placeholder = "Maximum temp";
+        maxTempInputCell.appendChild(maxTempInput);
+      
+        row.appendChild(dateCell);
+        row.appendChild(fromCell);
+        row.appendChild(messageCell);
+        row.appendChild(rainInputCell);
+        row.appendChild(minTempInputCell);
+        row.appendChild(maxTempInputCell);
+      
+        tbody.appendChild(row);
+      }
+    }
+
+  
+
+
+    
+</script>
+
 {% endblock content %}

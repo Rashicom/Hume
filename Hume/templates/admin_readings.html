@@ -1,0 +1,62 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block readings %}active{% endblock readings %}
+
+{% block content %}
+<!-- Content wrapper -->
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="card">
+        <h5 class="card-header">Manage Readings</h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Number</th>
+                <th>User name</th>
+                <th>Rain</th>
+                <th>Temp Min</th>
+                <th>Temp Max</th>
+              </tr>
+            </thead>
+            <tbody class="table-border-bottom-0">
+              <tr>
+                <td>12/2/2024</td>
+                <td>9846142484</td>
+                <td>John</td>
+                <td>
+                    <input class="form-control" type="number" id="rain" name="rain" value="12" placeholder="Rain"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="mintemp" name="min_temp" value="34" placeholder="Minimum temp"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="maxtemp" name="max_temp" value="36" placeholder="Maximum temp"/>
+                </td>
+              </tr>
+              <tr>
+                <td>12/2/2024</td>
+                <td>9846142484</td>
+                <td>sebi</td>
+                <td>
+                    <input class="form-control" type="number" id="rain" name="rain" value="12" placeholder="Rain"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="mintemp" name="min_temp" value="34" placeholder="Minimum temp"/>
+                </td>
+                <td>
+                    <input class="form-control" type="number" id="maxtemp" name="max_temp" value="36" placeholder="Maximum temp"/>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+
+{% endblock content %}

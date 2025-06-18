@@ -38,6 +38,12 @@ class DataManagement(View):
     """
     def get(self, request):
         return render(request, 'admin_data.html')
+    
+
+class ReadingsManagement(View):
+
+    def get(self, request):
+        return render(request, 'admin_readings.html')
 
 
 
