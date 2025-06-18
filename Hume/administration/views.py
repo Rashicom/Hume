@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from things.models import States, Districts, LocalAuthority, Ward, Location 
-from .forms import StateForm, DistrictForm, RegistrationForm
+from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
 from django.core.serializers import serialize
 from authorization.models import Account
-
+from things.models import Things
+from django.contrib.gis.geos import Point
 
 
 class AdminDash(View):
@@ -44,7 +45,46 @@ class ThingsManagement(View):
     Things Management View
     """
     def get(self, request):
-        return render(request, 'admin_things.html')
+        users = Account.objects.exclude(role=Account.UserRole.ADMIN).only("name", "uuid")
+        things = Things.objects.all()
+        states = States.objects.all().only("uuid", "state_name")
+        districts = Districts.objects.all().only("uuid","district_name")
+        return render(
+            request,
+            'admin_things.html',
+            {
+                "users":users,
+                "things":things,
+                "states":states,
+                "districts":districts
+            }
+        )
+    
+    def post(self, request):
+        try:
+            lat_str, lon_str = request.POST.get("location_cordinate").split(",")
+            point = Point(float(lon_str.strip()), float(lat_str.strip()))
+        except Exception as e:
+            print(e)
+            return redirect("admin-things")
+        form = ThingsRegistrationForm(
+            {
+                'collector':request.POST.get("collector"),
+                'thing_type':request.POST.get("thing_type"),
+                'state':request.POST.get("state"),
+                'district':request.POST.get("district"),
+                'location_cordinate':point
+            }
+        )
+        if Things.objects.filter(collector__uuid=request.POST.get("collector")).exists():
+            return redirect("admin-things")
+        if not form.is_valid():
+            # return eorror
+            print(form.errors)
+            return redirect("admin-things")
+
+        form.save()
+        return redirect("admin-things")
 
 
 class DataManagement(View):

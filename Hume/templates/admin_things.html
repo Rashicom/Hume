@@ -17,42 +17,40 @@
                   <p class="mb-4">
                     Create things for user
                   </p>
-                    <form id="formAccountSettings" method="POST" onsubmit="return false">
+                    <form id="formAccountSettings" method="POST">
+                      {% csrf_token %}
                       <div class="row">
                         <div class="mb-3 col-md-6">
                           <label for="firstName" class="form-label">Name</label>
-                          <select id="language" class="select2 form-select">
+                          <select id="language" class="select2 form-select", name="collector">
                             <option value="">Select User</option>
-                            <option value="en">John</option>
-                            <option value="fr">Peter</option>
-                            <option value="de">Sam</option>
-                            <option value="pt">Tom</option>
+                            {% for user in users %}
+                              <option value="{{user.uuid}}">{{user.name}}</option>
+                            {% endfor %}
                           </select>
                         </div>
                         <div class="mb-3 col-md-6">
                           <label for="email" class="form-label">Gauge Type</label>
-                          <select id="language" class="select2 form-select">
-                            <option value="">Rain-temp gauge</option>
-                            <option value="en">Rain gauge</option>
-                            <option value="fr">Temp gauge</option>
+                          <select id="language" class="select2 form-select" name="thing_type">
+                            <option value="RAIN_TEMP_GAUGE">Rain-temp gauge</option>
+                            <option value="RAIN_GAUGE">Rain gauge</option>
+                            <option value="TEMPERATURE_GAUGE">Temp gauge</option>
                           </select>
                         </div>
                         <div class="mb-3 col-md-6">
                           <label for="mobile_number" class="form-label">State</label>
-                          <select id="language" class="select2 form-select">
-                            <option value="">Kerala</option>
-                            <option value="en">Thamil nadu</option>
-                            <option value="fr">Karnataka</option>
+                          <select id="language" class="select2 form-select" name="state">
+                            {% for state in states %}
+                              <option value="{{state.uuid}}">{{state.state_name}}</option>
+                            {% endfor %}
                           </select>
                         </div>
                         <div class="mb-3 col-md-6">
                           <label for="organization" class="form-label">District</label>
-                          <select id="language" class="select2 form-select">
-                            <option value="">Wayanadu</option>
-                            <option value="en">Kannur</option>
-                            <option value="fr">Calicut</option>
-                            <option value="de">Malappuram</option>
-                            <option value="pt">Thrissur</option>
+                          <select id="language" class="select2 form-select" name="district">
+                            {% for district in districts %}
+                              <option value="{{district.uuid}}">{{district.district_name}}</option>
+                            {% endfor %}
                           </select>
                         </div>
                         <div class="mb-3 col-md-6">
@@ -61,7 +59,7 @@
                             class="form-control"
                             type="text"
                             id="location_coordinates"
-                            name="location_coordinates"
+                            name="location_cordinate"
                             value=""
                             placeholder="e.g., 10.12345, 76.54321"
                           />
@@ -109,31 +107,15 @@
             </thead>
             <tbody class="table-border-bottom-0">
             {% comment %} iterate users and list {% endcomment %}
+            {% for thing in things %}
               <tr>
-                <td>
-                  <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>9876543210</strong>
-                </td>
-                <td>Jerry Milton</td>
-                <td>
-                  <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>test@gmail.com</strong>
-                </td>
-                <td><span class="badge bg-label-warning me-1">Location</span></td>
-                <td>
-                  <div class="dropdown">
-                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                      <i class="bx bx-dots-vertical-rounded"></i>
-                    </button>
-                    <div class="dropdown-menu">
-                      <a class="dropdown-item" href="javascript:void(0);"
-                        ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                      >
-                      <a class="dropdown-item" href="javascript:void(0);"
-                        ><i class="bx bx-trash me-1"></i> Delete</a
-                      >
-                    </div>
-                  </div>
-                </td>
+                <td>{{thing.collector.name}}</td>
+                <td>{{thing.thing_type}}</td>
+                <td>{{thing.state}}</td>
+                <td>{{thing.district}}</td>
+                <td>{{thing.location_cordinate}}</td>
               </tr>
+            {% endfor %}
             </tbody>
           </table>
         </div>
