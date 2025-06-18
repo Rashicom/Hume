@@ -22,7 +22,8 @@
                             Create user and map things from data section
                           </p>
 
-                            <form id="formAccountSettings" method="POST" onsubmit="return false">
+                            <form id="formAccountSettings" method="POST">
+                              {% csrf_token %}
                               <div class="row">
                                 <div class="mb-3 col-md-6">
                                   <label for="firstName" class="form-label">Name</label>
@@ -30,7 +31,7 @@
                                     class="form-control"
                                     type="text"
                                     id="firstName"
-                                    name="firstName"
+                                    name="name"
                                     value=""
                                     placeholder="john"
                                     autofocus
@@ -52,19 +53,18 @@
                                   <input
                                       type="text"
                                       id="phoneNumber"
-                                      name="phoneNumber"
+                                      name="mobile_number"
                                       class="form-control"
                                       placeholder="202 555 0111"
                                     />
                                 </div>
                                 <div class="mb-3 col-md-6">
                                   <label for="organization" class="form-label">Organization</label>
-                                  <select id="language" class="select2 form-select">
-                                    <option value="">Select Language</option>
-                                    <option value="en">English</option>
-                                    <option value="fr">French</option>
-                                    <option value="de">German</option>
-                                    <option value="pt">Portuguese</option>
+                                  <select id="language" class="select2 form-select" name="role">
+                                    <option value="DATA_COLLECTOR">DATA_COLLECTOR</option>
+                                    <option value="STUDENTS">STUDENTS</option>
+                                    <option value="RESEARCHER">RESEARCHER</option>
+                                    <option value="INSTITUTES">INSTITUTES</option>
                                   </select>
                                 </div>
                             
@@ -110,37 +110,28 @@
                         <th>Phone</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Role</th>
                         <th>Thing</th>
-                        <th>Actions</th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
                     {% comment %} iterate users and list {% endcomment %}
+                    {% for user in users %}
                       <tr>
                         <td>
-                          <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>9876543210</strong>
+                          {{user.mobile_number}}
                         </td>
-                        <td>Jerry Milton</td>
+                        <td>{{user.name}}</td>
                         <td>
-                          <i class="fab fa-bootstrap fa-lg text-primary me-3"></i> <strong>test@gmail.com</strong>
+                          {{user.email}}
                         </td>
-                        <td><span class="badge bg-label-warning me-1">Location</span></td>
+                        <td><span class="badge bg-label-warning me-1">{{user.role}}</span></td>
                         <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bx bx-dots-vertical-rounded"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                              >
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-trash me-1"></i> Delete</a
-                              >
-                            </div>
-                          </div>
+                         impliment
                         </td>
                       </tr>
+                    {% endfor %}
+                      
                     </tbody>
                   </table>
                 </div>

@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from things.models import States, Districts, LocalAuthority, Ward, Location 
-from .forms import StateForm, DistrictForm
+from .forms import StateForm, DistrictForm, RegistrationForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
 from django.core.serializers import serialize
-
+from authorization.models import Account
 
 
 
@@ -22,7 +22,22 @@ class AccountsManagement(View):
     Accounts Management View
     """
     def get(self, request):
-        return render(request, 'admin_accounts.html')
+        users = Account.objects.exclude(role=Account.UserRole.ADMIN)
+        return render(request, 'admin_accounts.html', {"users":users})
+    
+    def post(self, request):
+        # set password same as mobile number
+        # password hashed from Account.save()
+        form = RegistrationForm(request.POST)
+        if not form.is_valid():
+            # TODO: redirect witha message
+            print("not valied")
+            print(form.errors)
+            return redirect("admin-accounts")
+        user_obj = form.save()
+        user_obj.set_password(user_obj.mobile_number)
+        user_obj.save()
+        return redirect("admin-accounts")
 
 class ThingsManagement(View):
     """
