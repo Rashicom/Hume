@@ -84,7 +84,8 @@ class ThingsReadings(BaseModel):
     reading_from = models.DateTimeField()
     reading_till = models.DateTimeField()
     rain_reading = models.FloatField(blank=True, null=True)
-    temp_reading = models.FloatField(blank=True, null=True)
+    temp_reading_min = models.FloatField(blank=True, null=True)
+    temp_reading_max = models.FloatField(blank=True, null=True)
     soil_temp_reading = models.FloatField(blank=True, null=True)
     soil_humidity_reading= models.FloatField(blank=True, null=True)
     

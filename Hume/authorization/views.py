@@ -156,7 +156,7 @@ class AdminLogin(View):
                 return render(request, 'admin_login.html', {"form": login_form, "error":"Permission blocked"})
             if user is not None:
                 login(request, user)
-                return redirect("profile")
+                return redirect("admin-dashboard")
             else:
                 return render(request, 'admin_login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
         return render(request, 'admin_login.html', {"form": login_form})

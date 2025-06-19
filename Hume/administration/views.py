@@ -7,14 +7,16 @@ from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
 from django.core.serializers import serialize
 from authorization.models import Account
-from things.models import Things
+from things.models import Things, ThingsReadings
 from django.contrib.gis.geos import Point
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AdminDash(View):
+class AdminDash(View, LoginRequiredMixin):
     """
     Admin Index View
     """
+    login_url = 'admin_login'
     def get(self, request):
         return render(request, 'admin_index.html')
 
@@ -103,9 +105,8 @@ class DataManagement(View):
 class ReadingsManagement(View):
 
     def get(self, request):
-        return render(request, 'admin_readings.html')
-
-
+        readings = ThingsReadings.objects.all()
+        return render(request, 'admin_readings.html', {"readings":readings})
 
 
 class AdminMapListingView(View):
