@@ -54,29 +54,15 @@
                 <th>Temp Max</th>
               </tr>
             </thead>
-            <tbody class="table-border-bottom-0">
-
-              <tr>
-                <td>No data</td>
-                <td>No data</td>
-                <td>No data</td>
-                <td>
-                    <input class="form-control" type="number" id="rain" name="rain" value="" placeholder="Rain"/>
-                </td>
-                <td>
-                    <input class="form-control" type="number" id="mintemp" name="min_temp" value="" placeholder="Minimum temp"/>
-                </td>
-                <td>
-                    <input class="form-control" type="number" id="maxtemp" name="max_temp" value="" placeholder="Maximum temp"/>
-                </td>
-              </tr>
+            <tbody id="weatherTableBody" class="table-border-bottom-0">
+              <!-- rows of data rendered from javascript -->
             </tbody>
           </table>
           
         </div>
         <div class="row">
             <div class="col-md-3">
-                 <button type="submit" class="btn btn-primary m-4">Submit</button>
+                 <button id="submitData" type="submit" class="btn btn-primary m-4">Submit</button>
             </div>
         </div>
        
@@ -400,6 +386,13 @@
       }
     }
 
+
+  // listener
+  document.getElementById("submitData").addEventListener("click", function () {
+    console.log("Trigger ....")
+    const rows = document.querySelectorAll("#weatherTableBody tr");
+    const data = [];
+  })
   
 
 

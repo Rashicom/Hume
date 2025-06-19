@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from things.models import States, Districts, LocalAuthority, Ward, Location 
-from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm
+from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
@@ -94,6 +94,11 @@ class DataManagement(View):
     def get(self, request):
         return render(request, 'admin_data.html')
     
+    def post(self, request):
+        print(request.POST)
+        form = ThingsReadingForm(request.POST)
+        print(form.is_valid())
+        return redirect("admin-data")
 
 class ReadingsManagement(View):
 
