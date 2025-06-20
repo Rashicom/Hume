@@ -392,7 +392,65 @@
     console.log("Trigger ....")
     const rows = document.querySelectorAll("#weatherTableBody tr");
     const data = [];
+    rows.forEach((row) => {
+
+      // extract data from html
+      const cells = row.querySelectorAll("td");
+      const date = cells[0].textContent || cells[0].querySelector("input")?.value;
+      const from = cells[1].textContent || cells[1].querySelector("input")?.value;
+      const message = cells[2].textContent || cells[2].querySelector("input")?.value;
+      const rain = parseFloat(cells[3].querySelector("input").value);
+      const min_temp = parseFloat(cells[4].querySelector("input").value);
+      const max_temp = parseFloat(cells[5].querySelector("input").value);
+      
+      // push to object
+      data.push({
+        date,
+        from,
+        message,
+        rain,
+        min_temp,
+        max_temp,
+      });
+    })
+
+    // submit
+    fetch("/administration/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        console.log("Success:", response);
+        alert("Data submitted successfully");
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        alert("Error submitting data");
+      });
   })
+
+
+  // Helper to get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
   
 
 

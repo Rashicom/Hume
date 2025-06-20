@@ -10,7 +10,7 @@ from authorization.models import Account
 from things.models import Things, ThingsReadings
 from django.contrib.gis.geos import Point
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.http import JsonResponse
 
 class AdminDash(View, LoginRequiredMixin):
     """
@@ -100,7 +100,7 @@ class DataManagement(View):
         print(request.POST)
         form = ThingsReadingForm(request.POST)
         print(form.is_valid())
-        return redirect("admin-data")
+        return JsonResponse({"status":"success"})
 
 class ReadingsManagement(View):
 
