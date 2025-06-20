@@ -385,7 +385,12 @@
         tbody.appendChild(row);
       }
     }
-
+  
+  function cleanMobileNumber(raw) {
+    return raw.replace(/^\+91/, "")  // remove +91
+              .replace(/\s+/g, "")   // remove all whitespace
+              .trim();               // trim just in case
+  }
 
   // listener
   document.getElementById("submitData").addEventListener("click", function () {
@@ -405,12 +410,10 @@
       
       // push to object
       data.push({
-        date,
-        from,
-        message,
-        rain,
-        min_temp,
-        max_temp,
+        "mobile_number":cleanMobileNumber(from),
+        "rain_reading":rain,
+        "temp_reading_min":min_temp,
+        "temp_reading_max":max_temp,
       });
     })
 
@@ -425,8 +428,44 @@
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log("Success:", response);
-        alert("Data submitted successfully");
+        const errorRows = response.error_records;
+        if (errorRows) {
+          alert("Data partially submitted successfully, Some data cant be submitted")
+        } else {
+          alert("Data submitted successfully");
+        }
+
+        const tbody = document.getElementById("weatherTableBody");
+        const allRows = Array.from(tbody.querySelectorAll("tr"));
+
+        
+        // 1. Create a Set of row indexes to keep (errors only)
+        const errorIndexes = new Set(errorRows.map(row => row.row_idx));
+        
+        // 2. Remove all valid rows
+        allRows.forEach((row, idx) => {
+            if (!errorIndexes.has(idx)) {
+                row.remove();  // Remove valid rows
+            }
+        });
+        
+        // 3. Re-populate error messages and updated data
+        errorRows.forEach(errorRow => {
+            const row = allRows[errorRow.row_idx];
+            if (!row) return;
+
+            // Remove any existing error message
+            let errorCell = row.querySelector(".error-cell");
+            if (errorCell) {
+                errorCell.innerText = errorRow.error;
+            } else {
+                // Add error as a new <td> if not already present
+                const td = document.createElement("td");
+                td.className = "error-cell";
+                td.innerText = errorRow.error;
+                row.appendChild(td);
+            }
+        })
       })
       .catch((err) => {
         console.error("Error:", err);

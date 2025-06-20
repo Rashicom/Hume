@@ -11,6 +11,7 @@ from things.models import Things, ThingsReadings
 from django.contrib.gis.geos import Point
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
+from datetime import datetime, timedelta
 
 class AdminDash(View, LoginRequiredMixin):
     """
@@ -97,10 +98,31 @@ class DataManagement(View):
         return render(request, 'admin_data.html')
     
     def post(self, request):
-        print(request.POST)
-        form = ThingsReadingForm(request.POST)
-        print(form.is_valid())
-        return JsonResponse({"status":"success"})
+        data = json.loads(request.body)
+        error_data = list()
+        for idx,row in enumerate(data):
+            user = Account.objects.filter(mobile_number=row.get("mobile_number")).last()
+            if not user:
+                error_data.append({**row, "error":"user not found", "row_idx":idx})
+                continue
+            thing = user.my_things.last()
+            if not thing:
+                error_data.append({**row, "error":"thing not found for the user", "row_idx":idx})
+                continue
+
+            # update data
+            reading_obj,created=ThingsReadings.objects.update_or_create(
+                thing=thing,
+                created_at__date=datetime.now().date(),
+                defaults={
+                    "reading_from":(datetime.now() - timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0),
+                    "reading_till":datetime.now().replace(hour=8, minute=0, second=0, microsecond=0),
+                    "rain_reading":row.get("rain_reading"),
+                    "temp_reading_min":row.get("temp_reading_min"),
+                    "temp_reading_max":row.get("temp_reading_max")
+                }
+            )
+        return JsonResponse({"status":"success", "error_records":error_data})
 
 class ReadingsManagement(View):
 
