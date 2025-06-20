@@ -127,7 +127,15 @@
                         </td>
                         <td><span class="badge bg-label-warning me-1">{{user.role}}</span></td>
                         <td>
-                         
+                          {% with thing=user.my_things.first %}
+                            {% if thing %}
+                              {% with coords=thing.location_cordinate %}
+                                {{ coords.y|floatformat:6 }}, {{ coords.x|floatformat:6 }}
+                              {% endwith %}
+                            {% else %}
+                              Not found
+                            {% endif %}
+                          {% endwith %}
                         </td>
                       </tr>
                     {% endfor %}

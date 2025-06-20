@@ -26,7 +26,7 @@ class AccountsManagement(View):
     Accounts Management View
     """
     def get(self, request):
-        users = Account.objects.exclude(role=Account.UserRole.ADMIN)
+        users = Account.objects.exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True)
         return render(request, 'admin_accounts.html', {"users":users})
     
     def post(self, request):
@@ -66,7 +66,8 @@ class ThingsManagement(View):
     def post(self, request):
         try:
             lat_str, lon_str = request.POST.get("location_cordinate").split(",")
-            point = Point(float(lon_str.strip()), float(lat_str.strip()))
+            point = Point((float(lon_str.strip()), float(lat_str.strip())), srid=4326)
+            print(point)
         except Exception as e:
             print(e)
             return redirect("admin-things")
