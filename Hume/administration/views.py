@@ -12,6 +12,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from datetime import datetime, timedelta
+from django.db.models import Exists, OuterRef
 
 class AdminDash(View, LoginRequiredMixin):
     """
@@ -48,7 +49,9 @@ class ThingsManagement(View):
     Things Management View
     """
     def get(self, request):
-        users = Account.objects.exclude(role=Account.UserRole.ADMIN).only("name", "uuid")
+        users = Account.objects.annotate(
+            has_thing=Exists(Things.objects.filter(collector=OuterRef('pk')))
+        ).filter(has_thing=False).exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True).only("name", "uuid")
         things = Things.objects.all()
         states = States.objects.all().only("uuid", "state_name")
         districts = Districts.objects.all().only("uuid","district_name")
