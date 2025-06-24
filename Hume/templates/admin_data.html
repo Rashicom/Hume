@@ -46,7 +46,6 @@
           <table class="table" id="weatherTable">
             <thead>
               <tr>
-                <th>Date</th>
                 <th>Number</th>
                 <th>Message</th>
                 <th>Rain</th>
@@ -339,14 +338,16 @@
         const date = item.time_stamp
           ? new Date(item.time_stamp).toLocaleDateString("en-GB")
           : "-";
-        const dateCell = document.createElement("td");
-        dateCell.textContent = date;
+        // const dateCell = document.createElement("td");
+        // dateCell.textContent = date;
       
         const fromCell = document.createElement("td");
         fromCell.textContent = item.from;
       
         const messageCell = document.createElement("td");
         messageCell.textContent = item.message_content;
+        messageCell.style.whiteSpace = "normal";
+        messageCell.style.wordBreak = "break-word";
       
         const rainInputCell = document.createElement("td");
         const rainInput = document.createElement("input");
@@ -355,6 +356,7 @@
         rainInput.name = "rain";
         rainInput.value = item.rain ?? "";
         rainInput.placeholder = "Rain";
+        rainInput.style.width = "100px";
         rainInputCell.appendChild(rainInput);
       
         const minTempInputCell = document.createElement("td");
@@ -364,6 +366,7 @@
         minTempInput.name = "min_temp";
         minTempInput.value = item.min_temp ?? "";
         minTempInput.placeholder = "Minimum temp";
+        minTempInput.style.width = "100px";
         minTempInputCell.appendChild(minTempInput);
       
         const maxTempInputCell = document.createElement("td");
@@ -373,9 +376,10 @@
         maxTempInput.name = "max_temp";
         maxTempInput.value = item.max_temp ?? "";
         maxTempInput.placeholder = "Maximum temp";
+        maxTempInput.style.width = "100px";
         maxTempInputCell.appendChild(maxTempInput);
       
-        row.appendChild(dateCell);
+        // row.appendChild(dateCell);
         row.appendChild(fromCell);
         row.appendChild(messageCell);
         row.appendChild(rainInputCell);
@@ -401,12 +405,12 @@
 
       // extract data from html
       const cells = row.querySelectorAll("td");
-      const date = cells[0].textContent || cells[0].querySelector("input")?.value;
-      const from = cells[1].textContent || cells[1].querySelector("input")?.value;
-      const message = cells[2].textContent || cells[2].querySelector("input")?.value;
-      const rain = parseFloat(cells[3].querySelector("input").value);
-      const min_temp = parseFloat(cells[4].querySelector("input").value);
-      const max_temp = parseFloat(cells[5].querySelector("input").value);
+      // const date = cells[0].textContent || cells[0].querySelector("input")?.value;
+      const from = cells[0].textContent || cells[1].querySelector("input")?.value;
+      const message = cells[1].textContent || cells[2].querySelector("input")?.value;
+      const rain = parseFloat(cells[2].querySelector("input").value);
+      const min_temp = parseFloat(cells[3].querySelector("input").value);
+      const max_temp = parseFloat(cells[4].querySelector("input").value);
       
       // push to object
       data.push({
@@ -463,6 +467,7 @@
                 const td = document.createElement("td");
                 td.className = "error-cell";
                 td.innerText = errorRow.error;
+                td.style.color = "red";
                 row.appendChild(td);
             }
         })
