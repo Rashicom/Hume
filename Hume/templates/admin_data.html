@@ -1,0 +1,499 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% block data %}active{% endblock data %}
+
+{% block content %}
+<!-- Content wrapper -->
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+        <div class="row">
+            <div class="col-lg-12 mb-4 order-0">
+              <div class="card">
+                <div class="d-flex align-items-end row">
+                  <div class="col-sm-9">
+                    <div class="card-body">
+                      <h5 class="card-title text-primary">Upload watsapp file ! 🎉</h5>
+                      <p class="mb-4">
+                        Upload your watsapp file, let me take a look in to it.
+                      </p>
+                      <label for="formFile" class="form-label">File</label>
+                      <input class="form-control mb-4" type="file" id="formFile" />
+                      <button type="submit" class="btn btn-primary me-2" id="submitFileBtn">Submit</button>
+                    </div>
+                  </div>
+                  <div class="col-sm-3 text-center text-sm-left">
+                    <div class="card-body pb-0 px-0 px-md-4">
+                      <img
+                        src="{% static 'assets/img/illustrations/man-with-laptop-light.png' %}"
+                        height="140"
+                        alt="View Badge User"
+                        data-app-dark-img="illustrations/man-with-laptop-dark.png"
+                        data-app-light-img="illustrations/man-with-laptop-light.png"
+                      />
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="container-xxl flex-grow-1 container-p-y">
+      <div class="card">
+        <h5 class="card-header">Varify data</h5>
+        <div class="table-responsive text-nowrap">
+          <table class="table" id="weatherTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Number</th>
+                <th>Message</th>
+                <th>Rain</th>
+                <th>Temp Min</th>
+                <th>Temp Max</th>
+              </tr>
+            </thead>
+            <tbody id="weatherTableBody" class="table-border-bottom-0">
+              <!-- rows of data rendered from javascript -->
+            </tbody>
+          </table>
+          
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                 <button id="submitData" type="submit" class="btn btn-primary m-4">Submit</button>
+            </div>
+        </div>
+       
+      </div>
+      
+    </div>
+
+</div>
+
+<script>
+    document.getElementById("submitFileBtn").addEventListener("click", function () {
+        console.log("entent triggered")
+        const fileInput = document.getElementById("formFile");
+        const file = fileInput.files[0];
+
+        if (!file) {
+            alert("Please select a file");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const text = e.target.result;
+            // extract message
+            const lines = text.split(/\r?\n/); // Split lines
+            
+            // process and extract lines
+            const messages = extractData(lines);
+
+            // retrive values from message
+            const { for_update_list, invalied_messages } = processData(messages);
+
+            // prepare rendering elements
+            renderEditableTable(for_update_list)
+
+            // process message
+            // render to table
+        };
+        reader.readAsText(file);
+    });
+
+    function normalize(text) {
+      return text.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    }
+
+    function extractData(lines) {
+        const datePattern = /\d{1,4}[-./]\d{1,4}[-./]\d{1,4}/;
+        const messageList = [];
+        const pattern = /(\d{2}\/\d{2}\/\d{4}), (\d{2}:\d{2}) - ([^:]+): (.*)/;
+
+        let i = 0;
+        const len = lines.length;
+
+        while (i < len) {
+          const line = lines[i];
+        
+          if (line === "\n" || line.trim() === "") {
+            i++;
+            continue;
+          }
+      
+          const match = line.match(pattern);
+      
+          if (match) {
+            const [_, date, time, messageFrom, messageContentStart] = match;
+            const dateTimeStr = `${date} ${time}`;
+            const dateTimeObj = new Date(
+              dateTimeStr.replace(/(\d{2})\/(\d{2})\/(\d{4})/, "$3-$2-$1")
+            );
+
+            i++;
+            const msgLines = [];
+
+            // Accumulate continuation lines (until next message pattern)
+            while (i < len && !pattern.test(lines[i])) {
+              msgLines.push(lines[i]);
+              i++;
+            }
+        
+            let fullMessage = messageContentStart + " " + msgLines.join(" ");
+            fullMessage = fullMessage.replace(/\s+/g, " ").trim();
+            fullMessage = fullMessage.replace(" \n ", " ").trim();
+        
+            messageList.push({
+              from: messageFrom,
+              time_stamp: dateTimeObj,
+              message_content: normalize(fullMessage),
+            });
+          } else {
+            i++;
+          }
+        }
+    
+        return messageList;
+    }
+
+
+
+    function getData(txt) {
+        let i = 0;
+        let pointer = 0;
+        let digits = [];
+        const data = { rain: [], time: [], temp: [] };
+
+        while (i < txt.length) {
+          const char = txt[i];
+        
+          if (/\d/.test(char)) {
+            pointer = i;
+
+            // Read full number or time (e.g., "10.5", "8:30")
+            while (i < txt.length && "1234567890.:".includes(txt[i])) {
+              i++;
+            }
+        
+            digits.push(txt.slice(pointer, i));
+        
+            // Skip spaces
+            while (i < txt.length && txt[i] === " ") {
+              i++;
+            }
+        
+            const unitCandidates = txt.slice(i);
+            const rainUnits = ["mm", "m.m", "m m", "മീ.മീ", "മീമീ", "മി.മി", "മിമി"];
+            const timeUnits = ["pm", "p.m", "am", "a.m"];
+        
+            const isRain = rainUnits.some(unit => unitCandidates.startsWith(unit));
+            const isTime = timeUnits.some(unit => unitCandidates.startsWith(unit));
+        
+            if (isRain) {
+              let rainLevel = digits.join("").trim().replace(":", ".");
+              if (rainLevel.endsWith(".") || rainLevel.endsWith(":")) {
+                rainLevel = rainLevel.slice(0, -1);
+              }
+              data.rain.push({ value: parseFloat(rainLevel), unit: "mm" });
+          
+            } else if (isTime) {
+              let timeValue = digits.join("").trim();
+              if (timeValue.endsWith(".") || timeValue.endsWith(":")) {
+                timeValue = timeValue.slice(0, -1);
+              }
+          
+              const isPM = timeUnits.slice(0, 2).some(unit => unitCandidates.startsWith(unit));
+              data.time.push({ value: timeValue, unit: isPM ? "pm" : "am" });
+          
+            } else if (digits[0].includes(":")) {
+              // Fallback time format (e.g., "8:30" with no am/pm)
+              let timeValue = digits.join("").trim();
+              if (timeValue.endsWith(".")) {
+                timeValue = timeValue.slice(0, -1);
+              }
+              data.time.push({ value: timeValue, unit: "am" });
+          
+            } else {
+              // Temperature fallback
+              let tempValue = digits.join("").trim();
+              if (tempValue.endsWith(".") || tempValue.endsWith(":")) {
+                tempValue = tempValue.slice(0, -1);
+              }
+              if (!isNaN(tempValue) && data.temp.length < 2) {
+                data.temp.push(parseFloat(tempValue));
+              }
+            }
+        
+            digits = [];
+        
+          } else {
+            i++;
+            pointer = i;
+          }
+        }
+        return data;
+    }
+
+
+    function processData(messageList) {
+        const datePattern = /\d{1,4}[-./]\d{1,4}[-./]\d{1,4}/g;
+        const forUpdateList = [];
+        const invalidMessages = [];
+
+        for (const message of messageList) {
+          let msg = message.message_content;
+        
+          // Match date patterns
+          const dates = msg.match(datePattern) || [];
+        
+          if (dates.length === 2) {
+            // Reject messages that span two dates
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Multiple day compaigned entry cannot be accepted"
+            });
+            continue;
+          }
+        
+          // Remove found dates from message
+          for (const dt of dates) {
+            msg = msg.replace(dt, " ");
+          }
+        
+          let data;
+          try {
+            data = getData(msg);
+          } catch (e) {
+            console.error(e);
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Invalied data to read"
+            });
+            continue;
+          }
+        
+          // Rain validation
+          const rains = (data.rain || []).map(rn => rn.value);
+          if (rains.length > 1) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Multiple rain measurements cannot be accepted"
+            });
+            continue;
+          } else if (rains.length === 0) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "No rain mesurements found"
+            });
+            continue;
+          }
+          const rain = rains[0];
+        
+          // Temperature validation
+          const temps = data.temp || [];
+          let max_temp = null;
+          let min_temp = null;
+        
+          if (temps.length > 2) {
+            invalidMessages.push({
+              from: message.from,
+              message_content: message.message_content,
+              error: "Cannot retrive temperature data"
+            });
+          } else if (temps.length > 0) {
+            max_temp = Math.max(...temps);
+            min_temp = Math.min(...temps);
+          }
+        
+          // Final valid data
+          forUpdateList.push({
+            from: message.from,
+            message_content: message.message_content,
+            rain: rain,
+            max_temp: max_temp,
+            min_temp: min_temp,
+          });
+        }
+        return {
+          for_update_list: forUpdateList,
+          invalied_messages: invalidMessages
+        };
+    }
+
+
+    function renderEditableTable(forUpdateList) {
+      const tbody = document.querySelector('#weatherTable tbody');
+      tbody.innerHTML = ""; // clear previous content
+
+      for (const item of forUpdateList) {
+        const row = document.createElement("tr");
+      
+        // Date column (you can adjust this if you want actual date, currently using timestamp)
+        const date = item.time_stamp
+          ? new Date(item.time_stamp).toLocaleDateString("en-GB")
+          : "-";
+        const dateCell = document.createElement("td");
+        dateCell.textContent = date;
+      
+        const fromCell = document.createElement("td");
+        fromCell.textContent = item.from;
+      
+        const messageCell = document.createElement("td");
+        messageCell.textContent = item.message_content;
+      
+        const rainInputCell = document.createElement("td");
+        const rainInput = document.createElement("input");
+        rainInput.className = "form-control";
+        rainInput.type = "number";
+        rainInput.name = "rain";
+        rainInput.value = item.rain ?? "";
+        rainInput.placeholder = "Rain";
+        rainInputCell.appendChild(rainInput);
+      
+        const minTempInputCell = document.createElement("td");
+        const minTempInput = document.createElement("input");
+        minTempInput.className = "form-control";
+        minTempInput.type = "number";
+        minTempInput.name = "min_temp";
+        minTempInput.value = item.min_temp ?? "";
+        minTempInput.placeholder = "Minimum temp";
+        minTempInputCell.appendChild(minTempInput);
+      
+        const maxTempInputCell = document.createElement("td");
+        const maxTempInput = document.createElement("input");
+        maxTempInput.className = "form-control";
+        maxTempInput.type = "number";
+        maxTempInput.name = "max_temp";
+        maxTempInput.value = item.max_temp ?? "";
+        maxTempInput.placeholder = "Maximum temp";
+        maxTempInputCell.appendChild(maxTempInput);
+      
+        row.appendChild(dateCell);
+        row.appendChild(fromCell);
+        row.appendChild(messageCell);
+        row.appendChild(rainInputCell);
+        row.appendChild(minTempInputCell);
+        row.appendChild(maxTempInputCell);
+      
+        tbody.appendChild(row);
+      }
+    }
+  
+  function cleanMobileNumber(raw) {
+    return raw.replace(/^\+91/, "")  // remove +91
+              .replace(/\s+/g, "")   // remove all whitespace
+              .trim();               // trim just in case
+  }
+
+  // listener
+  document.getElementById("submitData").addEventListener("click", function () {
+    console.log("Trigger ....")
+    const rows = document.querySelectorAll("#weatherTableBody tr");
+    const data = [];
+    rows.forEach((row) => {
+
+      // extract data from html
+      const cells = row.querySelectorAll("td");
+      const date = cells[0].textContent || cells[0].querySelector("input")?.value;
+      const from = cells[1].textContent || cells[1].querySelector("input")?.value;
+      const message = cells[2].textContent || cells[2].querySelector("input")?.value;
+      const rain = parseFloat(cells[3].querySelector("input").value);
+      const min_temp = parseFloat(cells[4].querySelector("input").value);
+      const max_temp = parseFloat(cells[5].querySelector("input").value);
+      
+      // push to object
+      data.push({
+        "mobile_number":cleanMobileNumber(from),
+        "rain_reading":rain,
+        "temp_reading_min":min_temp,
+        "temp_reading_max":max_temp,
+      });
+    })
+
+    // submit
+    fetch("/administration/data", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => res.json())
+      .then((response) => {
+        const errorRows = response.error_records;
+        if (errorRows) {
+          alert("Data partially submitted successfully, Some data cant be submitted")
+        } else {
+          alert("Data submitted successfully");
+        }
+
+        const tbody = document.getElementById("weatherTableBody");
+        const allRows = Array.from(tbody.querySelectorAll("tr"));
+
+        
+        // 1. Create a Set of row indexes to keep (errors only)
+        const errorIndexes = new Set(errorRows.map(row => row.row_idx));
+        
+        // 2. Remove all valid rows
+        allRows.forEach((row, idx) => {
+            if (!errorIndexes.has(idx)) {
+                row.remove();  // Remove valid rows
+            }
+        });
+        
+        // 3. Re-populate error messages and updated data
+        errorRows.forEach(errorRow => {
+            const row = allRows[errorRow.row_idx];
+            if (!row) return;
+
+            // Remove any existing error message
+            let errorCell = row.querySelector(".error-cell");
+            if (errorCell) {
+                errorCell.innerText = errorRow.error;
+            } else {
+                // Add error as a new <td> if not already present
+                const td = document.createElement("td");
+                td.className = "error-cell";
+                td.innerText = errorRow.error;
+                row.appendChild(td);
+            }
+        })
+      })
+      .catch((err) => {
+        console.error("Error:", err);
+        alert("Error submitting data");
+      });
+  })
+
+
+  // Helper to get CSRF token
+  function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      const cookies = document.cookie.split(";");
+      for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i].trim();
+        // Does this cookie string begin with the name we want?
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+  
+
+
+    
+</script>
+
+{% endblock content %}

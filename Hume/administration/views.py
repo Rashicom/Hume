@@ -1,11 +1,138 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from things.models import States, Districts, LocalAuthority, Ward, Location 
-from .forms import StateForm, DistrictForm
+from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
 from django.core.serializers import serialize
+from authorization.models import Account
+from things.models import Things, ThingsReadings
+from django.contrib.gis.geos import Point
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
+from datetime import datetime, timedelta
+from django.db.models import Exists, OuterRef
+
+class AdminDash(View, LoginRequiredMixin):
+    """
+    Admin Index View
+    """
+    login_url = 'admin_login'
+    def get(self, request):
+        return render(request, 'admin_index.html')
+
+class AccountsManagement(View):
+    """
+    Accounts Management View
+    """
+    def get(self, request):
+        users = Account.objects.exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True)
+        return render(request, 'admin_accounts.html', {"users":users})
+    
+    def post(self, request):
+        # set password same as mobile number
+        # password hashed from Account.save()
+        form = RegistrationForm(request.POST)
+        if not form.is_valid():
+            # TODO: redirect witha message
+            print("not valied")
+            print(form.errors)
+            return redirect("admin-accounts")
+        user_obj = form.save()
+        user_obj.set_password(user_obj.mobile_number)
+        user_obj.save()
+        return redirect("admin-accounts")
+
+class ThingsManagement(View):
+    """
+    Things Management View
+    """
+    def get(self, request):
+        users = Account.objects.annotate(
+            has_thing=Exists(Things.objects.filter(collector=OuterRef('pk')))
+        ).filter(has_thing=False).exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True).only("name", "uuid")
+        things = Things.objects.all()
+        states = States.objects.all().only("uuid", "state_name")
+        districts = Districts.objects.all().only("uuid","district_name")
+        return render(
+            request,
+            'admin_things.html',
+            {
+                "users":users,
+                "things":things,
+                "states":states,
+                "districts":districts
+            }
+        )
+    
+    def post(self, request):
+        try:
+            lat_str, lon_str = request.POST.get("location_cordinate").split(",")
+            point = Point((float(lon_str.strip()), float(lat_str.strip())), srid=4326)
+            print(point)
+        except Exception as e:
+            print(e)
+            return redirect("admin-things")
+        form = ThingsRegistrationForm(
+            {
+                'collector':request.POST.get("collector"),
+                'thing_type':request.POST.get("thing_type"),
+                'state':request.POST.get("state"),
+                'district':request.POST.get("district"),
+                'location_cordinate':point
+            }
+        )
+        if Things.objects.filter(collector__uuid=request.POST.get("collector")).exists():
+            return redirect("admin-things")
+        if not form.is_valid():
+            # return eorror
+            print(form.errors)
+            return redirect("admin-things")
+
+        form.save()
+        return redirect("admin-things")
+
+
+class DataManagement(View):
+    """
+    Data Management View
+    """
+    def get(self, request):
+        return render(request, 'admin_data.html')
+    
+    def post(self, request):
+        data = json.loads(request.body)
+        error_data = list()
+        for idx,row in enumerate(data):
+            user = Account.objects.filter(mobile_number=row.get("mobile_number")).last()
+            if not user:
+                error_data.append({**row, "error":"user not found", "row_idx":idx})
+                continue
+            thing = user.my_things.last()
+            if not thing:
+                error_data.append({**row, "error":"thing not found for the user", "row_idx":idx})
+                continue
+
+            # update data
+            reading_obj,created=ThingsReadings.objects.update_or_create(
+                thing=thing,
+                created_at__date=datetime.now().date(),
+                defaults={
+                    "reading_from":(datetime.now() - timedelta(days=1)).replace(hour=8, minute=0, second=0, microsecond=0),
+                    "reading_till":datetime.now().replace(hour=8, minute=0, second=0, microsecond=0),
+                    "rain_reading":row.get("rain_reading"),
+                    "temp_reading_min":row.get("temp_reading_min"),
+                    "temp_reading_max":row.get("temp_reading_max")
+                }
+            )
+        return JsonResponse({"status":"success", "error_records":error_data})
+
+class ReadingsManagement(View):
+
+    def get(self, request):
+        readings = ThingsReadings.objects.all()
+        return render(request, 'admin_readings.html', {"readings":readings})
 
 
 class AdminMapListingView(View):

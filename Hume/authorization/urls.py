@@ -16,4 +16,8 @@ urlpatterns = [
     path('gallery/', views.Gallery.as_view(), name='gallery'),
 
     path('map/', views.TestMap.as_view(), name='map'),
+
+    # admin login 
+    path('admin/login/', views.AdminLogin.as_view(), name="admin_login")
+
 ]
