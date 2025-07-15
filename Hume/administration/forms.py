@@ -1,5 +1,5 @@
 from django import forms
-from things.models import States, Districts, Ward, Location
+from things.models import States, Districts
 from authorization.models import Account
 from things.models import Things, ThingsReadings
 from django.contrib.gis.geos import Point

@@ -21,38 +21,16 @@ class Districts(BaseModel):
     def __str__(self):
         return str(self.district_name)
 
-
-class LocalAuthority(BaseModel):
-    class AuthorityType(models.TextChoices):
-        MUNICIPAL_CORPORATION = "municipal_corporation"
-        MUNICIPALITY = "municipality"
-        GRAM_PANCHAYATH = "gram_panchayat"
-    authority_type = models.CharField(max_length=50, choices=AuthorityType)
+# cluster is a geographical area within a district which is defined by hume
+class Cluster(BaseModel):
+    cluster_name = models.CharField(max_length=100)
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    boundary = models.PolygonField(srid=4326, blank=True, null=True)
-
-
-class Ward(BaseModel):
-    ward_name = models.CharField(max_length=100)
-    state = models.ForeignKey(States, on_delete=models.CASCADE)
-    district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
     boundary = models.PolygonField(srid=4326, blank=True, null=True)
 
     def __str__(self):
-        return str(self.ward_name)
-    
-class Location(BaseModel):
-    location_name = models.CharField(max_length=100)
-    state = models.ForeignKey(States, on_delete=models.CASCADE)
-    district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE)
-    ward = models.ForeignKey(Ward, on_delete=models.CASCADE)
-    boundary = models.PolygonField(srid=4326, blank=True, null=True)
+        return str(self.cluster_name)
 
-    def __str__(self):
-        return str(self.location_name)
     
 # things
 class Things(BaseModel):
@@ -70,14 +48,13 @@ class Things(BaseModel):
     )
     state = models.ForeignKey(States, on_delete=models.CASCADE)
     district = models.ForeignKey(Districts, on_delete=models.CASCADE)
-    localauthority = models.ForeignKey(LocalAuthority, on_delete=models.CASCADE, blank=True, null=True)
-    ward = models.ForeignKey(Ward, on_delete=models.CASCADE, blank=True, null=True)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, blank=True, null=True)
+    
+    cluster = models.ForeignKey(Cluster, on_delete=models.CASCADE, blank=True, null=True)
     location_cordinate = models.PointField(srid=4326)
     is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return str(f"{self.collector}:{self.location}")
+        return str(f"{self.collector}:{self.cluster}")
 
 class ThingsReadings(BaseModel):
     thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name="readings")

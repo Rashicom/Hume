@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from things.models import States, Districts, LocalAuthority, Ward, Location 
+from things.models import States, Districts
 from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
@@ -142,10 +142,6 @@ class AdminMapListingView(View):
     def get(self, request):
         states = States.objects.all()
         district_list = Districts.objects.all()
-        local_authorities = LocalAuthority.objects.all()
-        wards = Ward.objects.all()
-        locations = Location.objects.all()
-
         districts = list()
         for dist in district_list:
             districts.append(
@@ -161,9 +157,9 @@ class AdminMapListingView(View):
         return render(request, 'adminmap.html', {
             "states": states,
             "districts": districts,
-            "local_authorities": local_authorities,
-            "wards": wards,
-            "locations": locations,
+            "local_authorities": "deprecated",
+            "wards": "deprecated",
+            "locations": "deprecated",
             # 'districts_geojson':geojson_data
         })
 
