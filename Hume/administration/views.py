@@ -71,6 +71,7 @@ class ThingsManagement(View):
     def post(self, request):
         try:
             lat_str, lon_str = request.POST.get("location_cordinate").split(",")
+            # converting to [long,lat] wich postgres hadling way
             point = Point((float(lon_str.strip()), float(lat_str.strip())), srid=4326)
             print(point)
         except Exception as e:

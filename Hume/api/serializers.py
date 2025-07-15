@@ -20,3 +20,12 @@ class DailyAverageSerializer(serializers.Serializer):
     avg_temp_max = serializers.FloatField()
     avg_soil_temp = serializers.FloatField()
     avg_soil_humidity = serializers.FloatField()
+
+class ThiresReadingsMapSerializer(serializers.ModelSerializer):
+    cordinate = serializers.SerializerMethodField()
+    class Meta:
+        model = ThingsReadings
+        fields = ["created_at", "thing", "cordinate", "rain_reading", "temp_reading_min", "temp_reading_max", "soil_temp_reading", "soil_humidity_reading"]
+    
+    def get_cordinate(self, obj):
+        return obj.thing.location_cordinate.coords
