@@ -27,7 +27,7 @@ class RegistrationForm(forms.ModelForm):
 class ThingsRegistrationForm(forms.ModelForm):
     class Meta:
         model = Things
-        fields = ['collector', 'thing_type', 'state', 'district', 'location_cordinate']
+        fields = ['collector', 'thing_type', 'state', 'district', 'cluster', 'location_cordinate']
 
 
 class ThingsReadingForm(forms.ModelForm):

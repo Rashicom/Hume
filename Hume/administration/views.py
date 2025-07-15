@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from things.models import States, Districts
+from things.models import States, Districts, Cluster
 from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
@@ -55,6 +55,7 @@ class ThingsManagement(View):
         things = Things.objects.all()
         states = States.objects.all().only("uuid", "state_name")
         districts = Districts.objects.all().only("uuid","district_name")
+        clusters = Cluster.objects.all().only("uuid", "cluster_name")
         return render(
             request,
             'admin_things.html',
@@ -62,7 +63,8 @@ class ThingsManagement(View):
                 "users":users,
                 "things":things,
                 "states":states,
-                "districts":districts
+                "districts":districts,
+                "clusters":clusters
             }
         )
     
@@ -80,7 +82,8 @@ class ThingsManagement(View):
                 'thing_type':request.POST.get("thing_type"),
                 'state':request.POST.get("state"),
                 'district':request.POST.get("district"),
-                'location_cordinate':point
+                'location_cordinate':point,
+                'cluster':request.POST.get("cluster") if request.POST.get("cluster") else None
             }
         )
         if Things.objects.filter(collector__uuid=request.POST.get("collector")).exists():
