@@ -6,11 +6,13 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.exceptions import ValidationError
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from django.utils import timezone
+from django.db.models import Avg
+from django.db.models.functions import TruncDate
 
-from things.models import Things, ThingsReadings, States, Districts, LocalAuthority, Ward, Location
-from .serializers import ThingsReadingSerializer
+from things.models import Things, ThingsReadings, Cluster
+from .serializers import ThingsReadingSerializer, ClusterSerializer, DailyAverageSerializer, ThiresReadingsMapSerializer
 from authorization.models import Account
 from things.models import Things, ThingsReadings
 
@@ -54,3 +56,52 @@ class ThingsReadingsView(generics.ListCreateAPIView):
     
     def perform_create(self, serializer):
         serializer.save(thing=Things.objects.filter(collector=self.request.user).last())
+
+
+
+"""-------------------- Dashboard API's --------------------"""
+class ClusterView(generics.ListAPIView):
+    queryset = Cluster.objects.all()
+    serializer_class = ClusterSerializer
+    permission_classes = [AllowAny]
+
+
+class WeatherHistoryView(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, pk):
+        # return last 7 days average weather data of cluster(pk)
+        today = date.today()
+        seven_days_ago = today - timedelta(days=7)
+        cluster_obj = Cluster.objects.filter(pk=pk).last()
+        if not cluster_obj:
+            return Response({"error":"cluster not found"}, status=404)
+
+        # get all reading
+        # print(ThingsReadings.objects.filter(thing__cluster=cluster_obj, created_at__date__gte=seven_days_ago))
+        readings_history = (
+            ThingsReadings.objects
+            .filter(
+                thing__cluster=cluster_obj,
+                created_at__date__gte=seven_days_ago,
+            )
+            .annotate(day=TruncDate("created_at"))
+            .values("day")
+            .annotate(
+                avg_rain=Avg("rain_reading"),
+                avg_temp_min=Avg("temp_reading_min"),
+                avg_temp_max=Avg("temp_reading_max"),
+                avg_soil_temp=Avg("soil_temp_reading"),
+                avg_soil_humidity=Avg("soil_humidity_reading"),                
+            )
+            .order_by("-day")
+        )
+        serializer = DailyAverageSerializer(readings_history, many=True)
+        return Response({"data":serializer.data})
+
+class WeatherMapData(generics.ListAPIView):
+    permission_classes = [AllowAny]
+    def get(self, request, pk):
+        # return things data filtered by cluster(pk)
+        things = ThingsReadings.objects.filter(thing__cluster=pk, created_at__date=datetime.now().date())
+        serializer = ThiresReadingsMapSerializer(things, many=True)
+        return Response(serializer.data)

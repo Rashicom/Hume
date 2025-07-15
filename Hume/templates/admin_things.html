@@ -54,8 +54,16 @@
                           </select>
                         </div>
                         <div class="mb-3 col-md-6">
-                          <label for="organization" class="form-label">latitude and longitude separated by a comma</label>
-                          <p class="m-0">A PostGIS-compliant WKT. SRID=4326</p>
+                          <label for="organization" class="form-label">Cluster</label>
+                          <select id="language" class="select2 form-select" name="cluster">
+                            <option value="">Nill</option>
+                            {% for cluster in clusters %}
+                              <option value="{{cluster.uuid}}">{{cluster.cluster_name}}</option>
+                            {% endfor %}
+                          </select>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                          <label for="organization" class="form-label">lat and lon : A PostGIS-compliant WKT. SRID=4326</label>
                           <input
                             class="form-control"
                             type="text"
@@ -103,6 +111,7 @@
                 <th>Guate Type</th>
                 <th>State</th>
                 <th>District</th>
+                <th>Cluster</th>
                 <th>Cordinate</th>
               </tr>
             </thead>
@@ -114,6 +123,7 @@
                 <td>{{thing.thing_type}}</td>
                 <td>{{thing.state}}</td>
                 <td>{{thing.district}}</td>
+                <td>{{thing.cluster}}</td>
                 <td>{{thing.location_cordinate}}</td>
               </tr>
             {% endfor %}

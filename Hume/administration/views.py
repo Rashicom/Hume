@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from things.models import States, Districts, LocalAuthority, Ward, Location 
+from things.models import States, Districts, Cluster
 from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
@@ -55,6 +55,7 @@ class ThingsManagement(View):
         things = Things.objects.all()
         states = States.objects.all().only("uuid", "state_name")
         districts = Districts.objects.all().only("uuid","district_name")
+        clusters = Cluster.objects.all().only("uuid", "cluster_name")
         return render(
             request,
             'admin_things.html',
@@ -62,13 +63,15 @@ class ThingsManagement(View):
                 "users":users,
                 "things":things,
                 "states":states,
-                "districts":districts
+                "districts":districts,
+                "clusters":clusters
             }
         )
     
     def post(self, request):
         try:
             lat_str, lon_str = request.POST.get("location_cordinate").split(",")
+            # converting to [long,lat] wich postgres hadling way
             point = Point((float(lon_str.strip()), float(lat_str.strip())), srid=4326)
             print(point)
         except Exception as e:
@@ -80,7 +83,8 @@ class ThingsManagement(View):
                 'thing_type':request.POST.get("thing_type"),
                 'state':request.POST.get("state"),
                 'district':request.POST.get("district"),
-                'location_cordinate':point
+                'location_cordinate':point,
+                'cluster':request.POST.get("cluster") if request.POST.get("cluster") else None
             }
         )
         if Things.objects.filter(collector__uuid=request.POST.get("collector")).exists():
@@ -142,10 +146,6 @@ class AdminMapListingView(View):
     def get(self, request):
         states = States.objects.all()
         district_list = Districts.objects.all()
-        local_authorities = LocalAuthority.objects.all()
-        wards = Ward.objects.all()
-        locations = Location.objects.all()
-
         districts = list()
         for dist in district_list:
             districts.append(
@@ -161,9 +161,9 @@ class AdminMapListingView(View):
         return render(request, 'adminmap.html', {
             "states": states,
             "districts": districts,
-            "local_authorities": local_authorities,
-            "wards": wards,
-            "locations": locations,
+            "local_authorities": "deprecated",
+            "wards": "deprecated",
+            "locations": "deprecated",
             # 'districts_geojson':geojson_data
         })
 

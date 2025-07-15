@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import States, Districts, LocalAuthority, Ward, Location, Things, ThingsReadings
+from .models import States, Districts, Things, ThingsReadings, Cluster
 from django.utils.html import format_html
 
 
@@ -17,24 +17,17 @@ class DistrictsAdmin(admin.ModelAdmin):
 
     short_boundary.short_description = "Boundary"
 
-@admin.register(LocalAuthority)
-class LocalAuthorityAdmin(admin.ModelAdmin):
-    list_display = ('authority_type', 'state', 'district', 'boundary')
 
-@admin.register(Ward)
-class WardAdmin(admin.ModelAdmin):
-    list_display = ('ward_name', 'state', 'district', 'localauthority', 'boundary')
-
-@admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
-    list_display = ('location_name', 'state', 'district', 'localauthority', 'ward', 'boundary')
+@admin.register(Cluster)
+class ClusterAdmin(admin.ModelAdmin):
+    list_display = ('cluster_name', 'state', 'district', 'boundary')
 
 
 @admin.register(Things)
 class ThingsAdmin(admin.ModelAdmin):
-    list_display = ('thing_type', 'collector', 'state', 'district', 'localauthority', 'ward', 'location', 'location_cordinate', 'is_active')
+    list_display = ('thing_type', 'collector', 'state', 'district', 'cluster', 'location_cordinate', 'is_active')
 
 
 @admin.register(ThingsReadings)
 class ThingsReadingsAdmin(admin.ModelAdmin):
-    list_display = ('thing', 'reading_from', 'reading_till', 'rain_reading', 'created_at', 'updated_at')
+    list_display = ('thing', 'reading_from', 'reading_till', 'rain_reading', 'temp_reading_min', 'temp_reading_max', 'created_at')
