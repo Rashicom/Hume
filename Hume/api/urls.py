@@ -12,7 +12,7 @@ urlpatterns = [
     # dashboard apis
     # no auth
     path("cluster", ClusterView.as_view()),
-    path("weather-history/<uuid:pk>", WeatherHistoryView.as_view()),
-    path("weather-map/<uuid:pk>", WeatherMapData.as_view()),
+    path("cluster-weather-history/<uuid:pk>", WeatherHistoryView.as_view()),
+    path("cluster-weather-map/<uuid:pk>", WeatherMapData.as_view()),
 
 ]
