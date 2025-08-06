@@ -13,15 +13,33 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from datetime import datetime, timedelta
 from django.db.models import Exists, OuterRef
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class AdminDash(View, LoginRequiredMixin):
     """
     Admin Index View
     """
-    login_url = 'admin_login'
     def get(self, request):
-        return render(request, 'admin_index.html')
+        total_readings = ThingsReadings.objects.all().only("created_at")
+        things = Things.objects.all().only("created_at")
+        users = Account.objects.all().exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True).only("pk")
+        clusters = Cluster.objects.all().only("pk", "cluster_name")
+        return render(
+            request,
+            'admin_index.html',
+            {
+                "things_count":things.count(),
+                "today_readings": total_readings.filter(created_at__date=datetime.now().date()).count(),
+                "readings_rate": int((total_readings.filter(created_at__date=datetime.now().date()).count()/things.count())*100),
+                "users": users.count(),
+                "cluster_count":clusters.count(),
+                "clusters":clusters
+            }
+        )
 
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class AccountsManagement(View):
     """
     Accounts Management View
@@ -44,6 +62,8 @@ class AccountsManagement(View):
         user_obj.save()
         return redirect("admin-accounts")
 
+
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class ThingsManagement(View):
     """
     Things Management View
@@ -98,6 +118,7 @@ class ThingsManagement(View):
         return redirect("admin-things")
 
 
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class DataManagement(View):
     """
     Data Management View
@@ -132,6 +153,8 @@ class DataManagement(View):
             )
         return JsonResponse({"status":"success", "error_records":error_data})
 
+
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class ReadingsManagement(View):
 
     def get(self, request):
@@ -139,6 +162,7 @@ class ReadingsManagement(View):
         return render(request, 'admin_readings.html', {"readings":readings})
 
 
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class AdminMapListingView(View):
     """
     Admin Map Listing View
@@ -168,6 +192,7 @@ class AdminMapListingView(View):
         })
 
 
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class CreateState(View):
     def post(self, request):
         form = StateForm(request.POST)
@@ -178,6 +203,8 @@ class CreateState(View):
             print(form.errors)
             return render("admin-maps")
 
+
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class DeleteState(View):
     def get(self, request, uuid):
         state = States.objects.get(uuid=uuid)
@@ -185,6 +212,8 @@ class DeleteState(View):
         return redirect("admin-maps")
 
 
+
+@method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class CreateDistrict(View):
     def post(self, request):
         data = request.POST

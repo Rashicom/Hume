@@ -17,7 +17,8 @@ urlpatterns = [
 
     path('map/', views.TestMap.as_view(), name='map'),
 
-    # admin login 
-    path('admin/login/', views.AdminLogin.as_view(), name="admin_login")
+    # admin login
+    path('admin/login/', views.AdminLogin.as_view(), name="admin_login"),
+    path('admin/logout/', views.AdminLogout.as_view(), name="admin_logout")
 
 ]

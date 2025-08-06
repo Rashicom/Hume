@@ -160,3 +160,9 @@ class AdminLogin(View):
             else:
                 return render(request, 'admin_login.html', {"form": login_form, "error":"Invalid mobile_number or password"})
         return render(request, 'admin_login.html', {"form": login_form})
+
+# admin login 
+class AdminLogout(View):
+    def get(self, request):
+        logout(request)
+        return redirect('admin_login')
