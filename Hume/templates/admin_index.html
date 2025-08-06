@@ -69,8 +69,8 @@
                               </div>
                             </div>
                           </div>
-                          <span class="fw-semibold d-block mb-1">Toatal Readings</span>
-                          <h3 class="card-title mb-2">128</h3>
+                          <span class="fw-semibold d-block mb-1">Toatal Things</span>
+                          <h3 class="card-title mb-2">{{things_count}}</h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +7%</small>
                         </div>
                       </div>
@@ -103,9 +103,9 @@
                               </div>
                             </div>
                           </div>
-                          <span>Today</span>
-                          <h3 class="card-title text-nowrap mb-1">120</h3>
-                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> +28.42%</small>
+                          <span class="fw-semibold d-block mb-1">Readings today</span>
+                          <h3 class="card-title text-nowrap mb-1">{{today_readings}}</h3>
+                          <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> {{readings_rate}} %</small>
                         </div>
                       </div>
                     </div>
@@ -196,7 +196,7 @@
                             </div>
                           </div>
                           <span class="d-block mb-1">Users</span>
-                          <h3 class="card-title text-nowrap mb-2">256</h3>
+                          <h3 class="card-title text-nowrap mb-2">{{users}}</h3>
                           <small class="text-danger fw-semibold"><i class="bx bx-down-arrow-alt"></i> 14%</small>
                         </div>
                       </div>
@@ -225,8 +225,8 @@
                               </div>
                             </div>
                           </div>
-                          <span class="fw-semibold d-block mb-1">Things</span>
-                          <h3 class="card-title mb-2">157</h3>
+                          <span class="fw-semibold d-block mb-1">Clusters</span>
+                          <h3 class="card-title mb-2">{{cluster_count}}</h3>
                           <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> 28%</small>
                         </div>
                       </div>
@@ -263,8 +263,8 @@
                   <div class="card h-100">
                     <div class="card-header d-flex align-items-center justify-content-between pb-0">
                       <div class="card-title mb-0">
-                        <h5 class="m-0 me-2">Reading Statistics</h5>
-                        <small class="text-muted">12980 Total</small>
+                        <h5 class="m-0 me-2">Cluster Statistics</h5>
+                        <small class="text-muted">{{cluster_count}} Total</small>
                       </div>
                       <div class="dropdown">
                         <button
@@ -287,72 +287,31 @@
                     <div class="card-body">
                       <div class="d-flex justify-content-between align-items-center mb-3">
                         <div class="d-flex flex-column align-items-center gap-1">
-                          <h2 class="mb-2">120/10</h2>
+                          <h2 class="mb-2">{{things_count}}/{{today_readings}}</h2>
                           <span>Total Readings</span>
                         </div>
                         <div id="orderStatisticsChart"></div>
                       </div>
                       <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-primary"
-                              ><i class="bx bx-mobile-alt"></i
-                            ></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Wayanad</h6>
-                              <small class="text-muted">High precipitation</small>
+                        {% for cluster in clusters %}
+                          <li class="d-flex mb-4 pb-1">
+                            <div class="avatar flex-shrink-0 me-3">
+                              <span class="avatar-initial rounded bg-label-primary"
+                                ><i class="bx bx-mobile-alt"></i
+                              ></span>
                             </div>
-                            <div class="user-progress">
-                              <small class="fw-semibold">82</small>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                              <div class="me-2">
+                                <h6 class="mb-0">{{cluster.cluster_name}}</h6>
+                                <small class="text-muted">High precipitation</small>
+                              </div>
+                              <div class="user-progress">
+                                <small class="fw-semibold">82</small>
+                              </div>
                             </div>
-                          </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-success"><i class="bx bx-closet"></i></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Calicut</h6>
-                              <small class="text-muted">Low precipitation</small>
-                            </div>
-                            <div class="user-progress">
-                              <small class="fw-semibold">23</small>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-info"><i class="bx bx-home-alt"></i></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Kannur</h6>
-                              <small class="text-muted">Medium precipitation</small>
-                            </div>
-                            <div class="user-progress">
-                              <small class="fw-semibold">49</small>
-                            </div>
-                          </div>
-                        </li>
-                        <li class="d-flex">
-                          <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-secondary"
-                              ><i class="bx bx-football"></i
-                            ></span>
-                          </div>
-                          <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                              <h6 class="mb-0">Malappuram</h6>
-                              <small class="text-muted">Low precipitation</small>
-                            </div>
-                            <div class="user-progress">
-                              <small class="fw-semibold">19</small>
-                            </div>
-                          </div>
-                        </li>
+                          </li>
+                        {% endfor %}
+                      
                       </ul>
                     </div>
                   </div>

@@ -22,7 +22,22 @@ class AdminDash(View, LoginRequiredMixin):
     Admin Index View
     """
     def get(self, request):
-        return render(request, 'admin_index.html')
+        total_readings = ThingsReadings.objects.all().only("created_at")
+        things = Things.objects.all().only("created_at")
+        users = Account.objects.all().exclude(role=Account.UserRole.ADMIN).exclude(is_superuser=True).only("pk")
+        clusters = Cluster.objects.all().only("pk", "cluster_name")
+        return render(
+            request,
+            'admin_index.html',
+            {
+                "things_count":things.count(),
+                "today_readings": total_readings.filter(created_at__date=datetime.now().date()).count(),
+                "readings_rate": int((total_readings.filter(created_at__date=datetime.now().date()).count()/things.count())*100),
+                "users": users.count(),
+                "cluster_count":clusters.count(),
+                "clusters":clusters
+            }
+        )
 
 @method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class AccountsManagement(View):
