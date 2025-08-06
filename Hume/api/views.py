@@ -98,8 +98,9 @@ class WeatherHistoryView(APIView):
         serializer = DailyAverageSerializer(readings_history, many=True)
         return Response({"data":serializer.data})
 
-class WeatherMapData(generics.ListAPIView):
+class WeatherMapData(APIView):
     permission_classes = [AllowAny]
+
     def get(self, request, pk):
         # return things data filtered by cluster(pk)
         things = ThingsReadings.objects.filter(thing__cluster=pk, created_at__date=datetime.now().date())
