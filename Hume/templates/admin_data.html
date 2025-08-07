@@ -110,7 +110,7 @@
     function extractData(lines) {
         const datePattern = /\d{1,4}[-./]\d{1,4}[-./]\d{1,4}/;
         const messageList = [];
-        const pattern = /(\d{2}\/\d{2}\/\d{4}), (\d{2}:\d{2}) - ([^:]+): (.*)/;
+        const pattern = /(\d{1,2}\/\d{1,2}\/\d{2,4}), (\d{1,2}:\d{2}) - ([^:]+): (.*)/;
 
         let i = 0;
         const len = lines.length;
