@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from things.models import States, Districts, Cluster
-from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm
+from .forms import StateForm, DistrictForm, RegistrationForm, ThingsRegistrationForm, ThingsReadingForm, SumbitReadingsForm
 import json
 from django.contrib.gis.geos import Polygon, GEOSGeometry, MultiPolygon
 from django.db import transaction
@@ -11,10 +11,11 @@ from things.models import Things, ThingsReadings
 from django.contrib.gis.geos import Point
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.db.models import Exists, OuterRef
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models.functions import Lower
 
 @method_decorator(login_required(login_url="admin_login"), name="dispatch")
 class AdminDash(View, LoginRequiredMixin):
@@ -159,7 +160,28 @@ class ReadingsManagement(View):
 
     def get(self, request):
         readings = ThingsReadings.objects.all()
-        return render(request, 'admin_readings.html', {"readings":readings})
+        things_mapped_users = Account.objects.filter(my_things__isnull=False).order_by(Lower("name"))
+        return render(request, 'admin_readings.html', {"readings":readings, "things_mapped_users": things_mapped_users})
+    def post(self, request):
+        form = SumbitReadingsForm(request.POST)
+        if not form.is_valid():
+            print("Form not valid")
+            print(form.errors)
+            return redirect("admin-readings")
+        user_obj = Account.objects.filter(pk=form.cleaned_data.get("user_id")).last()
+        thing_obj = Things.objects.filter(collector=user_obj).last()
+        reading_obj = ThingsReadings.objects.update_or_create(
+            thing = thing_obj,
+            created_at__date = datetime.now(timezone.utc).date(),
+            defaults={
+                "reading_from":(datetime.now(timezone.utc) - timedelta(days=1)).replace(hour=2, minute=30, second=0, microsecond=0), # 2:30 utc >> 8:00 am ist
+                "reading_till":datetime.now(timezone.utc),
+                "rain_reading":form.cleaned_data.get("rain"),
+                "temp_reading_min":form.cleaned_data.get("min_temp"),
+                "temp_reading_max":form.cleaned_data.get("max_temp")
+            }
+        )
+        return redirect("admin-readings")
 
 
 @method_decorator(login_required(login_url="admin_login"), name="dispatch")

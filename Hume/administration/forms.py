@@ -34,3 +34,10 @@ class ThingsReadingForm(forms.ModelForm):
     class Meta:
         model = ThingsReadings
         fields = "__all__"
+
+
+class SumbitReadingsForm(forms.Form):
+    user_id = forms.UUIDField()
+    rain = forms.FloatField()
+    max_temp = forms.FloatField(required=False)
+    min_temp = forms.FloatField(required=False)
